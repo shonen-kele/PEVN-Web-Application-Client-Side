@@ -1,14 +1,7 @@
 <script setup>
   import { RouterLink } from 'vue-router';
-  import {ref,computed} from "vue"
   import {sharedEmail} from '@/states/LoginState.js'
-
-  let collapsed = ref(false);
-  let toggleSidebar = () => (collapsed.value = !collapsed.value)
-  //Computing the sidebar width
-  let sidebarWidth = computed(
-    () => `${collapsed.value ? 30 : 180}px`
-  )
+  import {toggleSidebar, collapsed, sidebarWidth} from '@/states/sidebarWidth.js'
 </script>
 
 <template>
@@ -51,6 +44,8 @@
     height: 96vh;
     margin-bottom: 0;
     bottom: 0;
+
+    transition: 0.3s ease;
   }
 
   #sidebar-container nav{

@@ -4,8 +4,8 @@
 
 <style>
   p1{
-    position: absolute;
-    top: 4vh;
-    left: 30px
+    margin-top: 4vh;
+    margin-left: auto;
+    margin-right: auto;
   }
 </style>
