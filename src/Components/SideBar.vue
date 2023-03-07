@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div id="sidebar-container" v-bind:style="{width:sidebarWidth}">
+  <div id="sidebar-container" :style="{width:sidebarWidth}">
     <nav v-if="!collapsed">
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/explore">Explore</RouterLink>

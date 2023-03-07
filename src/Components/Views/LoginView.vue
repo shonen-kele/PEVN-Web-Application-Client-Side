@@ -75,6 +75,8 @@
         margin-top: 4vh;
         margin-left: auto;
         margin-right: auto;
+        height: 100px;
+        width: 150px;
     }
     .error{
         color:crimson;
