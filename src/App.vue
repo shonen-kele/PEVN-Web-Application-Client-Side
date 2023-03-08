@@ -3,11 +3,6 @@
   import SideBar from "./Components/SideBar.vue";
   import { RouterView} from "vue-router";
   import {sidebarWidth} from '@/states/sidebarWidth.js'
-  import {ref} from 'vue'
-
-  let routerViewWidth = ref(
-    `calc(100vw - ${sidebarWidth})`
-  )
 </script>
 
 <template>

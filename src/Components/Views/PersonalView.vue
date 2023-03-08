@@ -1,15 +1,15 @@
 <script setup>
-  import { ref,watch } from 'vue';
+  import { ref, onUpdated } from 'vue';
+  import {sharedEmail} from '@/states/LoginState.js'
+  import {router} from '@/router/index.js'
+  import ArgumentService from '@/services/ArgumentService.js'
+
   let argumentTitle = ref()
   let argumentBody = ref()
-  let argumentLength = ref()
   let error = ref()
   let message = ref()
 
-  watch(argumentBody,()=>{
-    argumentLength.value = argumentBody.value.length
-    if(argumentBody.value == ''){argumentBody.value = undefined}
-  })
+  if(!sharedEmail.value){router.push('/login')}
 
   async function createArgument(){
     let response = await ArgumentService.createArgument({
@@ -28,21 +28,27 @@
       id="argument-title" 
       placeholder="Argument Title"
       v-model="argumentTitle"
+      class="argument-class"
     />
-      
+  
+    <div v-if="argumentTitle">{{ argumentTitle.length }}/100</div>
 
-    <input 
+    <textarea 
       id="argument-body" 
       placeholder="Enter the argument you are making"
       v-model="argumentBody"
+      class="argument-class"
     />
     <br/>
 
-    <div v-if="argumentBody">{{ argumentBody }}/5000</div>
+
+    <div v-if="argumentBody">{{ argumentBody.length }}/5000</div>
+
     <button 
       id="add-argument-button"
       @click="createArgument"
-    >Add Arena</button>
+      class="argument-class"
+    >Add Argument</button>
     <br/>
 
     <div v-if="error">{{ error }}</div>
@@ -57,20 +63,20 @@
     display: flex;
     flex-direction: column;
     align-content: center;
-    margin-left:auto;
-    margin-right: auto;
   }
 
   #argument-body{
     height: 500px;
     width: 500px;
+    color: azure;
+    text-align: left;
   }
   
   #argument-title{
     width: 450px;
-    margin-left:auto;
-    margin-right:auto;
     margin-bottom: 10px;
+    color:azure;
+    text-align: center;
   }
 
   button{
@@ -79,20 +85,19 @@
 
   #add-argument-button{
     width: 100px;
-    margin-left: auto;
-    margin-right: auto;
   }
 
-  input{
+  input, textarea{
     border-style: solid;
     border-color: rgb(53, 97, 114);
     background-color: rgb(28, 47, 48);
     border-radius: 5px;
-    text-align: center;
   }
 
   #argument-inputs{
-    margin-top: 4vh;
+    margin-top: calc(4vh + 10px);
+  }
+  .argument-class, div{
     margin-left: auto;
     margin-right: auto;
   }
