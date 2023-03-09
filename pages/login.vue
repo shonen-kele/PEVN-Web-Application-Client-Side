@@ -1,11 +1,11 @@
 <script setup>
-    import AuthenticationService from "/src/services/AuthenticationService.js"
+    import AuthenticationService from "@/services/AuthenticationService.js"
     import {sharedEmail,sharedPass} from '@/states/LoginState.js'
+    import {useRouter} from 'vue-router'
     import { ref } from "vue";
-    import { router } from "../../router/index.js";
     
 
-    
+    const router = useRouter()    
     let email = ref()
     let password = ref()
     let error = ref()

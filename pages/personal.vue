@@ -1,7 +1,6 @@
 <script setup>
-  import { ref, onUpdated } from 'vue';
+  import { ref } from 'vue';
   import {sharedEmail} from '@/states/LoginState.js'
-  import {router} from '@/router/index.js'
   import ArgumentService from '@/services/ArgumentService.js'
 
   let argumentTitle = ref()
@@ -9,7 +8,9 @@
   let error = ref()
   let message = ref()
 
-  if(!sharedEmail.value){router.push('/login')}
+  if(!sharedEmail.value){
+    //router.push('/login')
+  }
 
   async function createArgument(){
     let response = await ArgumentService.createArgument({

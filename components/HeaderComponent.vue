@@ -1,8 +1,7 @@
 <script setup>
-  import { RouterLink } from 'vue-router';
   import {sharedEmail} from '@/states/LoginState.js'
-import { router } from '../router/index.js';
-
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
 </script>
 
 <template>
@@ -13,12 +12,14 @@ import { router } from '../router/index.js';
     <button 
       id="userSettings"
       v-if="sharedEmail"
-      @click="()=>{router.push('/settings')}"
+      @click="()=>{
+        router.push({path: '/settings'})
+      }"
     >{{ sharedEmail }}</button>
 
     <button
       id="login" 
-      v-else @click="()=>{router.push('/login')}"
+      v-else @click="()=>{router.push({path:'/login'})}"
     >Login</button>
 
   </header>

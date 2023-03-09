@@ -1,5 +1,4 @@
 <script setup>
-  import { RouterLink } from 'vue-router';
   import {sharedEmail} from '@/states/LoginState.js'
   import {toggleSidebar, collapsed, sidebarWidth} from '@/states/sidebarWidth.js'
 </script>
@@ -7,18 +6,18 @@
 <template>
   <div id="sidebar-container" :style="{width:sidebarWidth}">
     <nav v-if="!collapsed">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/explore">Explore</RouterLink>
+      <NuxtLink to="/">Home</NuxtLink>
+      <NuxtLink to="/explore">Explore</NuxtLink>
 
-      <RouterLink 
+      <NuxtLink 
         v-if="sharedEmail" 
         to="/personal"
-      >Personal</RouterLink>
+      >Personal</NuxtLink>
 
-      <RouterLink
+      <NuxtLink
         v-else
         to="/login"
-      >Personal</RouterLink>
+      >Personal</NuxtLink>
     </nav>
     <div v-on:click="toggleSidebar">&lt; &gt;</div>
   </div>

@@ -1,7 +1,6 @@
 <script setup>
-  import HeaderComponent from  "./Components/HeaderComponent.vue";
-  import SideBar from "./Components/SideBar.vue";
-  import { RouterView} from "vue-router";
+  import SideBar from '@/Components/SideBar.vue'
+  import HeaderComponent from '@/Components/HeaderComponent.vue'
   import {sidebarWidth} from '@/states/sidebarWidth.js'
 </script>
 
@@ -10,7 +9,7 @@
   <div id="not-header">
     <SideBar/>
     <div id="router-view-container">
-      <RouterView/>
+      <NuxtPage/>
     </div>
   </div>
 </template>
@@ -22,6 +21,7 @@
     height: 96vh;
   }
   #router-view-container{
+    background-color: darkslategrey;
     margin-left: v-bind(sidebarWidth);
     transition: 0.3s ease;
     width: calc(100vw - v-bind(sidebarWidth));
