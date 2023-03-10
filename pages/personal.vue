@@ -1,16 +1,35 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref,onMounted } from 'vue';
   import {sharedEmail} from '@/states/LoginState.js'
   import ArgumentService from '@/services/ArgumentService.js'
+  import {useRouter} from 'vue-router'
+  const router = useRouter()
 
-  let argumentTitle = ref()
-  let argumentBody = ref()
-  let error = ref()
-  let message = ref()
+  const argumentTitle = ref()
+  const argumentBody = ref()
+  const error = ref()
+  const message = ref()
+  const personalArguments = ref([])
+  const isOpen = ref(false)
 
   if(!sharedEmail.value){
-    //router.push('/login')
+    router.push('/login')
   }
+
+  async function displayPersonalArguments(){
+    const result = await ArgumentService.displayPersonalArguments({
+      email: sharedEmail.value
+    })
+    console.log(result)
+    console.log(result.data.arguments)
+    result.data.arguments.forEach(instance => {
+      if(personalArguments.value.indexOf(instance)==-1){
+        personalArguments.value.push(instance)
+      }
+    });
+  }
+
+  onMounted(displayPersonalArguments)
 
   async function createArgument(){
     let response = await ArgumentService.createArgument({
@@ -20,6 +39,11 @@
     })
     error.value = response.data.error
     message.value = response.data.message
+    displayPersonalArguments()
+  }
+
+  function toggleArguments(){
+    isOpen.value = !isOpen.value
   }
 </script>
 
@@ -54,11 +78,24 @@
 
     <div v-if="error">{{ error }}</div>
     <div  v-if="message">{{ message }}</div>
+    <br/>
+    <button @click="toggleArguments">View Argumments</button>
+    <div id="personal-arguments-container" v-if="isOpen" >
+      <v-card v-for="argument in personalArguments"
+      :key="argument.id"
+      :title="argument.title"
+      :text="argument.argument"
+      variant="tonal"></v-card>
+    </div>
   </div>
   
 </template>
 
 <style scoped>
+
+  .v-card{
+    margin: 10px;
+  }
 
   div{
     display: flex;

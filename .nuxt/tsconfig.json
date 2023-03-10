@@ -62,16 +62,16 @@
         "node_modules/nuxt/dist/head/runtime/*"
       ],
       "#imports": [
-        "nuxt-dist/imports"
+        ".nuxt/imports"
       ],
       "#build": [
-        "nuxt-dist"
+        ".nuxt"
       ],
       "#build/*": [
-        "nuxt-dist/*"
+        ".nuxt/*"
       ],
       "#components": [
-        "nuxt-dist/components"
+        ".nuxt/components"
       ]
     }
   },

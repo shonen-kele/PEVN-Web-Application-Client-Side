@@ -4,7 +4,7 @@ import { defineNuxtConfig } from "nuxt/config";
 import path from 'path'
 
 export default defineNuxtConfig({
-    buildDir: 'nuxt-dist',
+    buildDir:'.nuxt',
     alias: {
         '@': path.resolve(__dirname)
     },
@@ -12,5 +12,5 @@ export default defineNuxtConfig({
     build:{
         transpile:['vuetify']
     },
-    vite:{assetsInclude:['**/*.Vue']}
+    vite:{assetsInclude:['**/*.Vue']},
 })

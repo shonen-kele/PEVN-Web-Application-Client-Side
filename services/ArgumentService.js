@@ -5,6 +5,9 @@ export default{
         return Api().post('/createArgument',ArgumentInputs)
     },
     destroyArgument(ArgumentInputs){
-        return Api().delete('/destroyArgument',ArgumentInputs)
+        return Api().post('/destroyArgument',ArgumentInputs)
+    },
+    displayPersonalArguments(ArgumentInputs){
+        return Api().post('/displayPersonalArguments',ArgumentInputs)
     }
 }
