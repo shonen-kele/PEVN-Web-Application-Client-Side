@@ -14,6 +14,8 @@
 
   if(!sharedEmail.value){
     router.push('/login')
+  } else {
+    onMounted(displayPersonalArguments)
   }
 
   async function displayPersonalArguments(){
@@ -22,14 +24,11 @@
     })
     console.log(result)
     console.log(result.data.arguments)
-    result.data.arguments.forEach(instance => {
-      if(personalArguments.value.indexOf(instance)==-1){
-        personalArguments.value.push(instance)
-      }
+    personalArguments.value = []
+    result.data.arguments.forEach(resultArgument => {
+      personalArguments.value.push(resultArgument)
     });
   }
-
-  onMounted(displayPersonalArguments)
 
   async function createArgument(){
     let response = await ArgumentService.createArgument({
@@ -42,14 +41,21 @@
     displayPersonalArguments()
   }
 
-  function toggleArguments(){
+  function toggleArgumentsView(){
     isOpen.value = !isOpen.value
+  }
+
+  async function destroyArgument(idNumber){
+    const result = await ArgumentService.destroyArgument({
+      id: idNumber
+    })
+    displayPersonalArguments()
   }
 </script>
 
 <template>
   <div id="argument-inputs">
-    <input 
+    <v-text-field 
       id="argument-title" 
       placeholder="Argument Title"
       v-model="argumentTitle"
@@ -58,34 +64,48 @@
   
     <div v-if="argumentTitle">{{ argumentTitle.length }}/100</div>
 
-    <textarea 
+    <v-textarea 
       id="argument-body" 
       placeholder="Enter the argument you are making"
       v-model="argumentBody"
       class="argument-class"
+      rows="20"
     />
-    <br/>
-
 
     <div v-if="argumentBody">{{ argumentBody.length }}/5000</div>
 
-    <button 
+    <v-btn 
       id="add-argument-button"
       @click="createArgument"
       class="argument-class"
-    >Add Argument</button>
+      variant="tonal"
+    >Add Argument</v-btn>
     <br/>
 
     <div v-if="error">{{ error }}</div>
     <div  v-if="message">{{ message }}</div>
     <br/>
-    <button @click="toggleArguments">View Argumments</button>
+
+    <v-btn 
+      @click="toggleArgumentsView"
+      variant="tonal"
+    >View Argumments</v-btn>
     <div id="personal-arguments-container" v-if="isOpen" >
       <v-card v-for="argument in personalArguments"
       :key="argument.id"
       :title="argument.title"
       :text="argument.argument"
-      variant="tonal"></v-card>
+      variant="tonal"
+    >
+      <v-card-actions>
+        <v-btn @click="destroyArgument(argument.id)">
+          Delete
+        </v-btn>
+        <v-btn>
+          Edit
+        </v-btn>
+      </v-card-actions>
+    </v-card>
     </div>
   </div>
   
@@ -103,26 +123,28 @@
     align-content: center;
   }
 
-  #argument-body{
-    height: 500px;
+  .v-textarea{
     width: 500px;
     color: azure;
     text-align: left;
   }
   
-  #argument-title{
+  .v-text-field{
     width: 450px;
     margin-bottom: 10px;
     color:azure;
     text-align: center;
   }
 
-  button{
-    border-style: solid;
+  .v-btn{
+    width: 200px;
+    margin: 10px;
   }
 
-  #add-argument-button{
-    width: 100px;
+  .v-card-actions{
+    display: flex;
+    flex-direction: row;
+    width: 80px;
   }
 
   input, textarea{
@@ -130,6 +152,11 @@
     border-color: rgb(53, 97, 114);
     background-color: rgb(28, 47, 48);
     border-radius: 5px;
+  }
+
+  #personal-arguments-container{
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   #argument-inputs{
