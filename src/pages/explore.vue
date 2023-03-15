@@ -1,5 +1,5 @@
 <template>
-  <p1>Hello</p1>
+  <p>Hello</p>
 </template>
 
 <style>

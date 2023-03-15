@@ -6,21 +6,23 @@
 
 <template>
   <header>
-    <input text="Search bar"/>
-    <button id="searchButton">Search</button>
+    <v-textfield text="Search bar"></v-textfield>
+    <v-btn variant="outlined" id="searchButton">Search</v-btn>
 
-    <button 
+    <v-btn 
       id="userSettings"
       v-if="sharedEmail"
       @click="()=>{
-        router.push({path: '/settings'})
+        router.push('/settings')
       }"
-    >{{ sharedEmail }}</button>
+      variant="outlined"
+    >{{ sharedEmail }}</v-btn>
 
-    <button
+    <v-btn
       id="login" 
       v-else @click="()=>{router.push({path:'/login'})}"
-    >Login</button>
+      variant="outlined"
+    >Login</v-btn>
 
   </header>
 </template>
@@ -32,11 +34,11 @@
     position: fixed;
     height: 4vh;
     width: 100vw;
-    border-style: solid;
+    border-bottom: solid;
     border-width: 3px;
-    border-color:rgb(53, 97, 114);
+    border-color:salmon;
     margin-top: 0;
-    background-image: linear-gradient(to bottom, rgb(97, 109, 109), darkslategrey);
+    background-image: linear-gradient(to bottom, rgb(211, 89, 89), beige);
   }
   input{
     background-color: rgb(97, 109, 109);

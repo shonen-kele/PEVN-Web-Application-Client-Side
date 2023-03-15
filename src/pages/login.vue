@@ -1,34 +1,46 @@
 <script setup>
     import AuthenticationService from "@/services/AuthenticationService.js"
-    import {sharedEmail,sharedPass} from '@/states/LoginState.js'
+    import {sharedEmail,token} from '@/states/LoginState.js'
     import {useRouter} from 'vue-router'
     import { ref } from "vue";
     
-
+    
+    
     const router = useRouter()    
     let email = ref()
     let password = ref()
     let error = ref()
     let message = ref()
     async function register(){
-        const response = await AuthenticationService.register({
-            email: email.value,
-            password: password.value
+        const {data} = await useFetch('/api/register',{
+            method:'POST',
+            body:{
+                email:email.value,
+                password:password.value
+            }
         })
-        error.value = response.data.error
-        message.value = response.data.message
+        error.value = data.value.errorMessage
+        message.value = data.value.message
+        if(message.value){
+            token.value = data.value.token
+            sharedEmail.value = data.value.email
+        }
     }
     
     async function login(){
-        const response = await AuthenticationService.login({
-            email: email.value,
-            password: password.value
+        const {data} = await useFetch('/api/login',{
+            method:'POST',
+            body:{
+                email:email.value,
+                password:password.value
+            }
         })
-        error.value = response.data.error
-        message.value = response.data.message
+        console.log(data)
+        error.value = data.value.errorMessage
+        message.value = data.value.message
         if(message.value){
             sharedEmail.value = email.value
-            sharedPass.value = password.value
+            token.value = data.value.token
             router.push('/personal')
         } else {
             sharedEmail.value = null

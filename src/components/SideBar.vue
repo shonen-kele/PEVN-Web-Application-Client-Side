@@ -25,9 +25,9 @@
 
 <style>
   #sidebar-container{
-    background-color: darkslategrey;
-    border-color: rgb(53, 97, 114);
-    border-style: solid;
+    background-color: beige;
+    border-right: solid;
+    border-color: salmon;
     border-width: 3px;
 
     /* Positioning */
@@ -60,7 +60,5 @@
     text-align: center;
   }
 
-  a{
-    color:beige;
-  }
+  
 </style>

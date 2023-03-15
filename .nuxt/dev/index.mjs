@@ -5,7 +5,10 @@ import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
 import { provider, isWindows } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/std-env/dist/index.mjs';
-import { defineEventHandler, handleCacheHeaders, createEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, getRequestHeaders, setResponseHeader, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, getQuery, createError } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, createEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, getRequestHeaders, setResponseHeader, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, readBody, getQuery, createError } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/h3/dist/index.mjs';
+import Joi from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/joi/lib/index.js';
+import { db } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/src/models/index.js';
+import jwt from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/jsonwebtoken/index.js';
 import { createRenderer } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import devalue from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/@nuxt/devalue/dist/devalue.mjs';
 import { renderToString } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/vue/server-renderer/index.mjs';
@@ -61,7 +64,7 @@ function deepFreeze(object) {
   return Object.freeze(object);
 }
 
-const serverAssets = [{"baseName":"server","dir":"C:/Users/kmba2/Coding/Projects in coding/Yessay/client/server/assets"}];
+const serverAssets = [{"baseName":"server","dir":"C:/Users/kmba2/Coding/Projects in coding/Yessay/client/src/server/assets"}];
 
 const assets = createStorage();
 
@@ -76,7 +79,7 @@ const useStorage = () => storage;
 storage.mount('/assets', assets);
 
 storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:\\Users\\kmba2\\Coding\\Projects in coding\\Yessay\\client","ignore":["**/node_modules/**","**/.git/**"]}));
-storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:\\Users\\kmba2\\Coding\\Projects in coding\\Yessay\\client\\server","ignore":["**/node_modules/**","**/.git/**"]}));
+storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:\\Users\\kmba2\\Coding\\Projects in coding\\Yessay\\client\\src\\server","ignore":["**/node_modules/**","**/.git/**"]}));
 storage.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:\\Users\\kmba2\\Coding\\Projects in coding\\Yessay\\client\\.nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
 storage.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:\\Users\\kmba2\\Coding\\Projects in coding\\Yessay\\client\\.nuxt\\cache","ignore":["**/node_modules/**","**/.git/**"]}));
 
@@ -484,9 +487,25 @@ const errorHandler = (async function errorhandler(error, event) {
   event.node.res.end(await res.text());
 });
 
+const _lazy_48xnwD = () => Promise.resolve().then(function () { return register_post$1; });
+const _lazy_HWojRq = () => Promise.resolve().then(function () { return login_post$1; });
+const _lazy_7zOVQh = () => Promise.resolve().then(function () { return getEmail_post; });
+const _lazy_dRxiMS = () => Promise.resolve().then(function () { return displayPersonalArguments_post$1; });
+const _lazy_CIdjjs = () => Promise.resolve().then(function () { return destroyArgument_post$1; });
+const _lazy_G9BrvS = () => Promise.resolve().then(function () { return deleteAccount_post$1; });
+const _lazy_S5RnCb = () => Promise.resolve().then(function () { return createArgument_post$1; });
+const _lazy_rgcJbM = () => Promise.resolve().then(function () { return confirmEdit_post$1; });
 const _lazy_ynvccF = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
+  { route: '/api/register', handler: _lazy_48xnwD, lazy: true, middleware: false, method: "post" },
+  { route: '/api/login', handler: _lazy_HWojRq, lazy: true, middleware: false, method: "post" },
+  { route: '/api/getEmail', handler: _lazy_7zOVQh, lazy: true, middleware: false, method: "post" },
+  { route: '/api/displayPersonalArguments', handler: _lazy_dRxiMS, lazy: true, middleware: false, method: "post" },
+  { route: '/api/destroyArgument', handler: _lazy_CIdjjs, lazy: true, middleware: false, method: "post" },
+  { route: '/api/deleteAccount', handler: _lazy_G9BrvS, lazy: true, middleware: false, method: "post" },
+  { route: '/api/createArgument', handler: _lazy_S5RnCb, lazy: true, middleware: false, method: "post" },
+  { route: '/api/confirmEdit', handler: _lazy_rgcJbM, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_ynvccF, lazy: true, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_ynvccF, lazy: true, middleware: false, method: undefined }
 ];
@@ -612,6 +631,274 @@ const template = _template;
 const errorDev = /*#__PURE__*/Object.freeze({
   __proto__: null,
   template: template
+});
+
+function jwtSignUser(userInstance) {
+  const ONE_WEEK = 60 * 60 * 24 * 7;
+  return jwt.sign(userInstance, "blur2456", {
+    expiresIn: ONE_WEEK
+  });
+}
+async function register(body) {
+  let userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
+  if (userInstance == null) {
+    console.log(db.sequelize.models.User.create);
+    await db.sequelize.models.User.create(body);
+    console.log("The user has signed in");
+    userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
+    const userJson = userInstance.toJSON();
+    return {
+      message: "The user has signed up",
+      token: jwtSignUser(userJson),
+      email: userInstance.email
+    };
+  } else {
+    console.log("The user has already signed up");
+    return { errorMessage: "The user has already signed up" };
+  }
+}
+async function login(body) {
+  const userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
+  if (userInstance === null) {
+    return { errorMessage: "The email is not in the database" };
+  }
+  const isPasswordValid = await userInstance.comparePassword(body.password);
+  if (!isPasswordValid) {
+    return { errorMessage: "The password was incorrect" };
+  } else {
+    const userJson = userInstance.toJSON();
+    return {
+      message: "You have successfully logged in",
+      token: jwtSignUser(userJson),
+      email: userInstance.email
+    };
+  }
+}
+async function deleteAccount(body) {
+  const userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
+  const isPasswordValid = await userInstance.comparePassword(body.password);
+  if (isPasswordValid) {
+    return { errorMessage: "You have entered the wrong password" };
+  } else {
+    userInstance.destroy();
+    return { message: "Your account was successfully deleted" };
+  }
+}
+
+function registerPolicy(body) {
+  if (body.email == void 0 || body.password == void 0) {
+    return {
+      error: true,
+      errorMessage: "The email or password is not defined"
+    };
+  }
+  const template = Joi.object({
+    email: Joi.string().email(),
+    password: Joi.string().regex(
+      new RegExp("^[a-zA-Z0-9!@#$%^&*)(+=._-]{8,32}$")
+    )
+  });
+  const { error } = template.validate(body);
+  if (error) {
+    switch (error.details[0].context.key) {
+      case "email":
+        console.log("The email format is not valid");
+        return { error: true, errorMessage: "The email format was not valid" };
+      case "password":
+        console.log("The password format is not valid");
+        return {
+          error: false,
+          errorMessage: `You must provide a valid password
+                    <br/>
+                    1. It must contain only the characters: a-z,A-Z,0-9 and special characters <br/>
+                    (!@#$^&*()+=._-{}[])
+                    <br/>
+                    2. It must only be 8-32 characters in length`
+        };
+      default:
+        return { error: true };
+    }
+  } else {
+    return { error: false };
+  }
+}
+function loginPolicy(body) {
+  console.log(body);
+  if (body.email == void 0) {
+    return { error: true, errorMessage: "You have not entered an email" };
+  }
+  const email = Joi.string().email();
+  const { error } = email.validate(body.email);
+  if (error) {
+    return { error: true, errorMessage: "What you provided was not the format of an email" };
+  } else {
+    return { error: false };
+  }
+}
+
+const register_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const { error, errorMessage } = registerPolicy(body);
+  if (!error) {
+    return register(body);
+  } else {
+    return errorMessage;
+  }
+});
+
+const register_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: register_post
+});
+
+const login_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const { error, errorMessage } = loginPolicy(body);
+  if (!error) {
+    return login(body);
+  } else {
+    return errorMessage;
+  }
+});
+
+const login_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: login_post
+});
+
+const getEmail_post = /*#__PURE__*/Object.freeze({
+  __proto__: null
+});
+
+async function createArgument(body) {
+  const argumentCount = await db.sequelize.models.Argument.count({
+    where: { email: body.email }
+  });
+  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: {
+    title: body.title,
+    email: body.email
+  } });
+  console.log("The argument instance is " + argumentInstance);
+  if (argumentInstance == null) {
+    await db.sequelize.models.Argument.create({
+      email: body.email,
+      title: body.title,
+      argument: body.argument,
+      argumentIndex: argumentCount + 1
+    });
+    return { message: "You have entered the argeument" };
+  } else {
+    return { errorMessage: "You have already entered this argument" };
+  }
+}
+async function destroyArgument(body) {
+  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: {
+    id: body.id
+  } });
+  if (argumentInstance == null) {
+    return { errorMessage: "The argument does not exist" };
+  } else {
+    await argumentInstance.destroy();
+    return { message: "The argument was destroyed" };
+  }
+}
+async function displayPersonalArguments(body) {
+  const argumentInstances = await db.sequelize.models.Argument.findAll({ where: { email: body.email } });
+  if (argumentInstances.length == 0) {
+    console.log("Here");
+    return { errorMessage: "You have made no argument" };
+  } else {
+    return { arguments: argumentInstances };
+  }
+}
+async function editArgument(body) {
+  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: { id: body.id } });
+  if (argumentInstance) {
+    await argumentInstance.update({ title: body.title });
+    await argumentInstance.update({ argument: body.argument });
+    return { error: false };
+  } else {
+    return { error: true };
+  }
+}
+
+const displayPersonalArguments_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  return displayPersonalArguments(body);
+});
+
+const displayPersonalArguments_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: displayPersonalArguments_post
+});
+
+const destroyArgument_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  return destroyArgument(body);
+});
+
+const destroyArgument_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: destroyArgument_post
+});
+
+const deleteAccount_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  return deleteAccount(body);
+});
+
+const deleteAccount_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: deleteAccount_post
+});
+
+function createArgumentPolicy(body) {
+  const titleTemplate = Joi.string().max(100).min(1);
+  const argumentTemplate = Joi.string().max(5e3).min(50);
+  const { titleError } = titleTemplate.validate(body.title);
+  const { argumentError } = argumentTemplate.validate(body.argument);
+  if (titleError) {
+    console.log("There was a title error");
+    return {
+      errorMessage: "The title is too long or too short",
+      error: true
+    };
+  } else if (argumentError) {
+    console.log("There was an argument error");
+    return {
+      error: true,
+      errorMessage: `The argument was either too long or too short 
+            <br/>
+            The argument must be at least 50 characters short or 5000 characters long.`
+    };
+  } else {
+    return false;
+  }
+}
+
+const createArgument_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const { error, errorMessage } = createArgumentPolicy(body);
+  if (!error) {
+    return createArgument(body);
+  } else {
+    return errorMessage;
+  }
+});
+
+const createArgument_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: createArgument_post
+});
+
+const confirmEdit_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  return editArgument(body);
+});
+
+const confirmEdit_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: confirmEdit_post
 });
 
 const appRootId = "__nuxt";

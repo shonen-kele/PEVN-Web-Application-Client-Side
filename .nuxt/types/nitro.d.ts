@@ -2,6 +2,30 @@
 declare module 'nitropack' {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
+    '/api/register': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/register.post').default>>
+    }
+    '/api/login': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/login.post').default>>
+    }
+    '/api/getEmail': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/getEmail.post').default>>
+    }
+    '/api/displayPersonalArguments': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/displayPersonalArguments.post').default>>
+    }
+    '/api/destroyArgument': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/destroyArgument.post').default>>
+    }
+    '/api/deleteAccount': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/deleteAccount.post').default>>
+    }
+    '/api/createArgument': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/createArgument.post').default>>
+    }
+    '/api/confirmEdit': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/confirmEdit.post').default>>
+    }
     '/__nuxt_error': {
       'default': Awaited<ReturnType<typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>
     }

@@ -1,16 +1,20 @@
-import vuetify from "vite-plugin-vuetify";
-import vue from '@vitejs/plugin-vue'
 import { defineNuxtConfig } from "nuxt/config";
 import path from 'path'
 
 export default defineNuxtConfig({
     buildDir:'.nuxt',
     alias: {
-        '@': path.resolve(__dirname)
+        '@': path.resolve(__dirname,'src')
     },
     css:['vuetify/lib/styles/main.css'],
     build:{
         transpile:['vuetify']
     },
-    vite:{assetsInclude:['**/*.Vue']},
+    vite:{assetsInclude:['**/*.Vue'],server:{
+        watch:{
+            usePolling: true
+        }
+    }},
+    srcDir: 'src/',
+    components:[{path:'@/components/special'}],
 })

@@ -1,9 +1,10 @@
 <script setup>
     import {ref} from 'vue'
     import {sharedEmail} from '@/states/LoginState.js'
-    import {router} from '../../router/index.js'
+    import {useRouter} from 'vue-router'
     import AuthenticationService from '@/services/AuthenticationService.js'
 
+    const router = useRouter()
     let wishToDelete = ref(false)
     let passInput = ref()
     let error = ref()
@@ -18,15 +19,15 @@
         wishToDelete.value = true
     }
     async function confirmDelete(){
-        let response = await AuthenticationService.deleteAccount({
-            email: sharedEmail.value,
-            password: passInput
+        let {data} = useFetch('/api/deleteAccount',{
+            method:'POST',
+            body:{
+                password:passInput.value
+            }
         })
-        console.log(response)
-        if(response.data.error){
-            error.value = response.data.error
+        if(data.value.errorMessage){
+            error.value = data.value.errorMesssage
         } else {
-            AuthenticationService.deleteLogin()
             router.push('/')
         }
     }
