@@ -6,8 +6,12 @@
 
 <template>
   <header>
-    <v-textfield text="Search bar"></v-textfield>
-    <v-btn variant="outlined" id="searchButton">Search</v-btn>
+    <v-text-field 
+    placeholder="Search"
+    density="compact"
+    variant="outlined"
+    clearable></v-text-field>
+    <v-btn variant="tonal" id="searchButton">Search</v-btn>
 
     <v-btn 
       id="userSettings"
@@ -15,13 +19,13 @@
       @click="()=>{
         router.push('/settings')
       }"
-      variant="outlined"
+      variant="tonal"
     >{{ sharedEmail }}</v-btn>
 
     <v-btn
       id="login" 
       v-else @click="()=>{router.push({path:'/login'})}"
-      variant="outlined"
+      variant="tonal"
     >Login</v-btn>
 
   </header>
@@ -42,6 +46,11 @@
   }
   input{
     background-color: rgb(97, 109, 109);
+  }
+
+  .v-text-field{
+    height: 0.5vh;
+    max-width: 200px;
   }
 
   #searchButton{

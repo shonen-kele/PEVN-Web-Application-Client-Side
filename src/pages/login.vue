@@ -52,30 +52,34 @@
 
 <template>
     <form>
-        <input 
+        <v-text-field 
             type="email"
             name="email"
             placeholder="email"
             v-model="email"
-        />
+            variant="outlined"
+        ></v-text-field>
         <br/>
-        <input 
+        <v-text-field 
             type="password"
             name="password"
             placeholder="password"
             v-model="password"
-        />
+            variant="outlined"
+        ></v-text-field>
         <br/>
-        <button 
+        <v-btn 
             id="login-button"
             @click="login"
             type="button"
-        >Login</button>
-        <button 
+            variant="tonal"
+        >Login</v-btn>
+        <v-btn 
             id="register-button"
             @click="register"
             type="button"
-        >Register</button>
+            variant = tonal
+        >Register</v-btn>
         <br/>
         <div v-if="error" class="error" v-html="error"></div>
         <div v-if="message" v-html="message"></div>
@@ -87,8 +91,8 @@
         margin-top: 4vh;
         margin-left: auto;
         margin-right: auto;
-        height: 100px;
-        width: 150px;
+        width: 400px;
+        height:200px
     }
     .error{
         color:crimson;

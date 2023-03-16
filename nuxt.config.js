@@ -10,9 +10,14 @@ export default defineNuxtConfig({
     build:{
         transpile:['vuetify']
     },
-    vite:{assetsInclude:['**/*.Vue'],server:{
-        watch:{
-            usePolling: true
+    vite:{
+        root:'@',
+        assetsInclude:['**/*.Vue'],
+        server:{
+        fs:{
+            allow:[
+                '@/components',
+            ]
         }
     }},
     srcDir: 'src/',
