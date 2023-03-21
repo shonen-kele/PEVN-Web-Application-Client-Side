@@ -3,7 +3,7 @@ import {db} from '@/models/index.js'
 import jwt from 'jsonwebtoken'
 function jwtSignUser(userInstance){
     const ONE_WEEK = 60 * 60 * 24 * 7
-    return jwt.sign(userInstance, 'blur2456',{
+    return jwt.sign(userInstance, process.env.JWT_SECRET,{
         expiresIn: ONE_WEEK
     })
 }
