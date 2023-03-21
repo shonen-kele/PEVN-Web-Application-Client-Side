@@ -1,18 +1,18 @@
 <script setup>
     import {ref} from 'vue'
-    import {sharedEmail} from '@/states/LoginState.js'
     import {useRouter} from 'vue-router'
-    import AuthenticationService from '@/services/AuthenticationService.js'
+    import { useLoginStore } from '@/stores/login'
 
+    const store = useLoginStore()
     const router = useRouter()
     const wishToDelete = ref(false)
     const passInput = ref()
     const error = ref()
-    if(!sharedEmail.value){
+    if(!store.sharedEmail.value){
         router.push('/')
     }
     function logout(){
-        sharedEmail.value = null
+        store.sharedEmail.value = null
         router.push('/')
     }
     function deleteAccount(){

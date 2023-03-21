@@ -1,10 +1,9 @@
 <script setup>
   import { ref,onMounted,computed } from 'vue';
-  import {sharedEmail} from '@/states/LoginState.js'
-  import ArgumentService from '@/services/ArgumentService.js'
   import {useRouter} from 'vue-router'
-  import {routerViewContainer} from '@/states/accessElements'
-
+  import { useLoginStore } from '@/stores/login'
+  
+  const store = useLoginStore()
   const router = useRouter()
   const argumentTitle = ref()
   const argumentBody = ref()
@@ -16,7 +15,7 @@
   const isEditting = ref(false)
   const editId = ref()
 
-  if(!sharedEmail.value){
+  if(!store.sharedEmail.value){
     router.push('/login')
   } else {
     onMounted(displayPersonalArguments)
@@ -26,7 +25,7 @@
     const {data} = await useFetch('/api/displayPersonalArguments',{
       method:'POST',
       body:{
-        email:sharedEmail.value
+        email:store.sharedEmail.value
       }
     })
     error2.value = data.value.errorMessage
@@ -40,7 +39,7 @@
     const {data} = await useFetch('/api/createArgument',{
       method:'POST',
       body:{
-        email: sharedEmail.value,
+        email: store.sharedEmail.value,
         title: argumentTitle.value,
         argument: argumentBody.value
       }

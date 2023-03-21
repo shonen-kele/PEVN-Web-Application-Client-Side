@@ -1,22 +1,24 @@
 <script setup>
-  import {sharedEmail} from '@/states/LoginState.js'
+  import { useLoginStore } from '@/stores/login'
   import { useSidebarWidthStore } from '@/stores/sidebarWidth'
-  const store = useSidebarWidthStore()
+
+  const sidebarStore = useSidebarWidthStore()
+  const loginStore = useLoginStore()
 </script>
 
 <template>
   <div
     id="sidebar-container"
-    :style="{width:store.sidebarWidth}"
+    :style="{width:sidebarStore.sidebarWidth}"
   >
     <div 
-      v-if="!store.collapsed" 
+      v-if="!sidebarStore.collapsed" 
       id="sidebarButton"
-      @click="store.toggleSidebar"
+      @click="sidebarStore.toggleSidebar"
     >
       &lt; &gt;
     </div>
-    <nav v-if="!store.collapsed">
+    <nav v-if="!sidebarStore.collapsed">
       <NuxtLink to="/">
         Home
       </NuxtLink>
@@ -25,7 +27,7 @@
       </NuxtLink>
 
       <NuxtLink 
-        v-if="sharedEmail" 
+        v-if="loginStore.sharedEmail" 
         to="/personal"
       >
         Personal
