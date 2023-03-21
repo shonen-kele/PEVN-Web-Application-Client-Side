@@ -92,41 +92,52 @@
     <!--text field/title-->
     <v-text-field 
       id="argument-title" 
-      placeholder="Argument Title"
       v-model="argumentTitle"
+      placeholder="Argument Title"
       class="argument-class"
     />
   
     <!--word counter-->
-    <div v-if="argumentTitle">{{ argumentTitle.length }}/100</div>
+    <div v-if="argumentTitle">
+      {{ argumentTitle.length }}/100
+    </div>
 
     <!--Text area-->
     <v-textarea 
       id="argument-body"
-      placeholder="Enter the argument you are making"
       v-model="argumentBody"
+      placeholder="Enter the argument you are making"
       class="argument-class"
       rows="20"
     />
 
     <!--word counter-->
-    <div v-if="argumentBody">{{ argumentBody.length }}/5000</div>
+    <div v-if="argumentBody">
+      {{ argumentBody.length }}/5000
+    </div>
 
     <!--button for adding argument-->
     <v-btn
       v-if="!isEditting" 
       id="add-argument-button"
-      @click="createArgument"
       class="argument-class"
       variant="tonal"
-    >Add Argument</v-btn>
+      @click="createArgument"
+    >
+      Add Argument
+    </v-btn>
 
     <!--buttons for editing-->
-    <div id="edit-buttons" v-if="isEditting">
+    <div
+      v-if="isEditting"
+      id="edit-buttons"
+    >
       <v-btn
         variant="tonal"
         @click="() => confirmEdit()"
-      >Confirm Edit</v-btn>
+      >
+        Confirm Edit
+      </v-btn>
       <v-btn
         variant="tonal"
         @click="() => {
@@ -134,45 +145,61 @@
           argumentBody=null
           argumentTitle=null
         }"
-      >Cancel Edit</v-btn>
+      >
+        Cancel Edit
+      </v-btn>
     </div>
 
     <!--messages-->
-    <div v-if="error">{{ error }}</div>
-    <div  v-if="message">{{ message }}</div>
-    <br/>
+    <div v-if="error">
+      {{ error }}
+    </div>
+    <div v-if="message">
+      {{ message }}
+    </div>
+    <br>
 
     <!--To toggle arguments view-->
     <v-btn 
+      variant="tonal"
       @click="toggleArgumentsView"
-      variant="tonal"
-    >View Argumments</v-btn>
-
-    <div id="personal-arguments-container" v-if="isOpen" >
-      <div v-if="error2">You have made no personal arguments yet</div>
-      <v-card v-else v-for="argument in personalArguments"
-      :key="argument.id"
-      :title="argument.title"
-      :text="argument.argument"
-      variant="tonal"
     >
-      <v-card-actions>
-        <v-btn @click="() => 
-          {if(!isEditting){
-            destroyArgument(argument.id)
-          }}"
-        >
-          Delete
-        </v-btn>
-        <v-btn 
-          @click="Edit(argument.id,argument.argument,argument.title)">
-          Edit
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+      View Argumments
+    </v-btn>
+
+    <div
+      v-if="isOpen"
+      id="personal-arguments-container"
+    >
+      <div v-if="error2">
+        You have made no personal arguments yet
+      </div>
+      <v-card
+        v-for="argument in personalArguments"
+        v-else
+        :key="argument.id"
+        :title="argument.title"
+        :text="argument.argument"
+        variant="tonal"
+      >
+        <v-card-actions>
+          <v-btn
+            @click="() => 
+            {if(!isEditting){
+              destroyArgument(argument.id)
+            }}"
+          >
+            Delete
+          </v-btn>
+          <v-btn 
+            @click="Edit(argument.id,argument.argument,argument.title)"
+          >
+            Edit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </div>
   </div>
-  
 </template>
 
 <style scoped>
@@ -222,7 +249,7 @@
   }
 
   #argument-inputs{
-    margin-top: calc(4vh + 10px);
+    margin-top: calc(4dvh + 10px);
   }
   .argument-class, div{
     margin-left: auto;

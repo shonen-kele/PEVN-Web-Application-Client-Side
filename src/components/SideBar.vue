@@ -1,34 +1,49 @@
 <script setup>
   import {sharedEmail} from '@/states/LoginState.js'
-  import {toggleSidebar, collapsed, sidebarWidth} from '@/states/sidebarWidth.js'
+  import { useSidebarWidthStore } from '@/stores/sidebarWidth'
+  const store = useSidebarWidthStore()
 </script>
 
 <template>
-  <div id="sidebar-container" :style="{width:sidebarWidth}">
-    <nav v-if="!collapsed">
-      <NuxtLink to="/">Home</NuxtLink>
-      <NuxtLink to="/explore">Explore</NuxtLink>
+  <div
+    id="sidebar-container"
+    :style="{width:store.sidebarWidth}"
+  >
+    <div 
+      v-if="!store.collapsed" 
+      id="sidebarButton"
+      @click="store.toggleSidebar"
+    >
+      &lt; &gt;
+    </div>
+    <nav v-if="!store.collapsed">
+      <NuxtLink to="/">
+        Home
+      </NuxtLink>
+      <NuxtLink to="/explore">
+        Explore
+      </NuxtLink>
 
       <NuxtLink 
         v-if="sharedEmail" 
         to="/personal"
-      >Personal</NuxtLink>
+      >
+        Personal
+      </NuxtLink>
 
       <NuxtLink
         v-else
         to="/login"
-      >Personal</NuxtLink>
+      >
+        Personal
+      </NuxtLink>
     </nav>
-    <div v-on:click="toggleSidebar">&lt; &gt;</div>
   </div>
 </template>
 
 <style>
   #sidebar-container{
-    background-color: beige;
-    border-right: solid;
-    border-color: salmon;
-    border-width: 3px;
+    background-color: salmon;
 
     /* Positioning */
     position: fixed;
@@ -40,7 +55,7 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    height: 96vh;
+    height: 100vh;
     margin-bottom: 0;
     bottom: 0;
 
@@ -55,10 +70,6 @@
   #sidebar-container div{
     width: inherit;
     height: 60px;
-    margin-top:auto;
-    margin-bottom: 0;
     text-align: center;
   }
-
-  
 </style>

@@ -56,3 +56,11 @@ export async function editArgument(body){
         return {error:true}
     }
 }
+export async function displayArguments(offset){
+    console.log('offset is ' + offset)
+    const {rows} = await db.sequelize.models.Argument.findAndCountAll({
+        limit:30,
+        offset: offset
+    })
+    return {arguments:rows}
+}

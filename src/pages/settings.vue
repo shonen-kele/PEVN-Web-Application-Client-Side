@@ -5,9 +5,9 @@
     import AuthenticationService from '@/services/AuthenticationService.js'
 
     const router = useRouter()
-    let wishToDelete = ref(false)
-    let passInput = ref()
-    let error = ref()
+    const wishToDelete = ref(false)
+    const passInput = ref()
+    const error = ref()
     if(!sharedEmail.value){
         router.push('/')
     }
@@ -19,7 +19,7 @@
         wishToDelete.value = true
     }
     async function confirmDelete(){
-        let {data} = useFetch('/api/deleteAccount',{
+        const {data} = useFetch('/api/deleteAccount',{
             method:'POST',
             body:{
                 password:passInput.value
@@ -34,18 +34,31 @@
 </script>
 
 <template>
-    <button @click="logout">Logout</button>
+  <button @click="logout">
+    Logout
+  </button>
 
-    <button @click="deleteAccount">Delete account</button>
-    <br/>
-    <div v-if="wishToDelete">
-        <input v-model="passInput"/>
-        <br/>
-        <button @click="confirmDelete">Confirm Account Deleteion</button>
-        <button @click="()=>{wishToDelete = false}">Cancel Account Deleteion</button> 
-        <br/>
-        <div v-if="error" class="error">{{ error }}</div>
+  <button @click="deleteAccount">
+    Delete account
+  </button>
+  <br>
+  <div v-if="wishToDelete">
+    <input v-model="passInput">
+    <br>
+    <button @click="confirmDelete">
+      Confirm Account Deleteion
+    </button>
+    <button @click="()=>{wishToDelete = false}">
+      Cancel Account Deleteion
+    </button> 
+    <br>
+    <div
+      v-if="error"
+      class="error"
+    >
+      {{ error }}
     </div>
+  </div>
 </template>
 
 <style scoped>
@@ -61,7 +74,7 @@
         height: 50px;
     }
     div, button{
-        margin-top: 4vh;
+        margin-top: 4dvh;
         margin-left: auto;
         margin-right: auto;
     }

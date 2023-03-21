@@ -22,4 +22,5 @@ export default defineNuxtConfig({
     }},
     srcDir: 'src/',
     components:[{path:'@/components/special'}],
+    modules:['@pinia/nuxt']
 })

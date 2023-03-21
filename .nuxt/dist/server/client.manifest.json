@@ -6,10 +6,10 @@
     "module": true,
     "resourceType": "script"
   },
-  "C:/Users/kmba2/Coding/Projects in coding/Yessay/client/node_modules/nuxt/dist/app/entry.mjs": {
+  "C:/Users/kmba2/Coding/Projects in coding/Yessay/client/node_modules/nuxt/dist/app/entry.js": {
     "resourceType": "script",
     "module": true,
     "isEntry": true,
-    "file": "C:/Users/kmba2/Coding/Projects in coding/Yessay/client/node_modules/nuxt/dist/app/entry.mjs"
+    "file": "C:/Users/kmba2/Coding/Projects in coding/Yessay/client/node_modules/nuxt/dist/app/entry.js"
   }
 }

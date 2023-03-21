@@ -1,59 +1,88 @@
 <script setup>
-  import {sharedEmail} from '@/states/LoginState.js'
+  import { useLoginStore } from '@/stores/login';
   import { useRouter } from 'vue-router'
+  import { useSidebarWidthStore } from '@/stores/sidebarWidth';
   const router = useRouter()
+  const sidebarStore = useSidebarWidthStore()
+  const loginStore = useLoginStore()
 </script>
 
 <template>
   <header>
-    <v-text-field 
-    placeholder="Search"
-    density="compact"
-    variant="outlined"
-    clearable></v-text-field>
-    <v-btn variant="tonal" id="searchButton">Search</v-btn>
+    <div
+      id="sidebarButton"
+      @click="sidebarStore.toggleSidebar"
+    >
+      &lt; &gt;
+    </div>
+
+    <div id="search">
+      <v-text-field 
+        id="searchBar"
+        placeholder="Search"
+        density="compact"
+        variant="outlined"
+        clearable
+      />
+      <v-btn
+        id="searchButton"
+        variant="tonal"
+      >
+        Search
+      </v-btn>
+    </div>
 
     <v-btn 
+      v-if="loginStore.sharedEmail"
       id="userSettings"
-      v-if="sharedEmail"
+      variant="tonal"
       @click="()=>{
         router.push('/settings')
       }"
-      variant="tonal"
-    >{{ sharedEmail }}</v-btn>
+    >
+      {{ loginStore.sharedEmail }}
+    </v-btn>
 
     <v-btn
-      id="login" 
-      v-else @click="()=>{router.push({path:'/login'})}"
+      v-else 
+      id="login"
       variant="tonal"
-    >Login</v-btn>
-
+      @click="()=>{router.push({path:'/login'})}"
+    >
+      Login
+    </v-btn>
   </header>
 </template>
 
 <style scoped>
   header{
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     position: fixed;
     height: 4vh;
     width: 100vw;
-    border-bottom: solid;
-    border-width: 3px;
-    border-color:salmon;
     margin-top: 0;
     background-image: linear-gradient(to bottom, rgb(211, 89, 89), beige);
+    padding-left: 50px;
+    padding-right: 50px;
   }
   input{
     background-color: rgb(97, 109, 109);
   }
 
   .v-text-field{
-    height: 0.5vh;
     max-width: 200px;
   }
 
   #searchButton{
     margin-right: 10px;
+  }
+
+  #search{
+    width: 500px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
   }
 </style>

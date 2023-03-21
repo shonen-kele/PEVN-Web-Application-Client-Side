@@ -1,5 +1,4 @@
 <script setup>
-    import AuthenticationService from "@/services/AuthenticationService.js"
     import {sharedEmail,token} from '@/states/LoginState.js'
     import {useRouter} from 'vue-router'
     import { ref } from "vue";
@@ -7,10 +6,10 @@
     
     
     const router = useRouter()    
-    let email = ref()
-    let password = ref()
-    let error = ref()
-    let message = ref()
+    const email = ref()
+    const password = ref()
+    const error = ref()
+    const message = ref()
     async function register(){
         const {data} = await useFetch('/api/register',{
             method:'POST',
@@ -51,44 +50,55 @@
 </script>
 
 <template>
-    <form>
-        <v-text-field 
-            type="email"
-            name="email"
-            placeholder="email"
-            v-model="email"
-            variant="outlined"
-        ></v-text-field>
-        <br/>
-        <v-text-field 
-            type="password"
-            name="password"
-            placeholder="password"
-            v-model="password"
-            variant="outlined"
-        ></v-text-field>
-        <br/>
-        <v-btn 
-            id="login-button"
-            @click="login"
-            type="button"
-            variant="tonal"
-        >Login</v-btn>
-        <v-btn 
-            id="register-button"
-            @click="register"
-            type="button"
-            variant = tonal
-        >Register</v-btn>
-        <br/>
-        <div v-if="error" class="error" v-html="error"></div>
-        <div v-if="message" v-html="message"></div>
-    </form>
+  <form>
+    <v-text-field 
+      v-model="email"
+      type="email"
+      name="email"
+      placeholder="email"
+      variant="outlined"
+    />
+    <br>
+    <v-text-field 
+      v-model="password"
+      type="password"
+      name="password"
+      placeholder="password"
+      variant="outlined"
+    />
+    <br>
+    <v-btn 
+      id="login-button"
+      type="button"
+      variant="tonal"
+      @click="login"
+    >
+      Login
+    </v-btn>
+    <v-btn 
+      id="register-button"
+      type="button"
+      variant="tonal"
+      @click="register"
+    >
+      Register
+    </v-btn>
+    <br>
+    <div
+      v-if="error"
+      class="error"
+      v-text="error"
+    />
+    <div
+      v-if="message"
+      v-text="error"
+    />
+  </form>
 </template>
 
 <style>
     form{
-        margin-top: 4vh;
+        margin-top: 4dvh;
         margin-left: auto;
         margin-right: auto;
         width: 400px;

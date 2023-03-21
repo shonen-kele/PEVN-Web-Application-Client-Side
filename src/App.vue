@@ -1,16 +1,18 @@
 <script setup>
   import SideBar from '@/Components/SideBar.vue'
   import HeaderComponent from '@/Components/HeaderComponent.vue'
-  import {sidebarWidth} from '@/states/sidebarWidth.js'
-  import {routerViewContainer} from '@/states/accessElements'
+  import { useSidebarWidthStore } from '@/stores/sidebarWidth'
+  const store = useSidebarWidthStore()
+  const sidebarWidth = computed(()=>store.sidebarWidth)
+
 </script>
 
 <template>
-  <HeaderComponent/>
+  <HeaderComponent />
   <div id="not-header">
-    <SideBar/>
-    <div id="router-view-container" ref="routerViewContainer">
-      <NuxtPage/>
+    <SideBar />
+    <div id="router-view-container">
+      <NuxtPage />
     </div>
   </div>
 </template>
@@ -19,19 +21,19 @@
   #not-header{
     display: flex;
     flex-direction: row;
-    height: 96vh;
+    height: 96dvh;
   }
   #router-view-container{
-    margin-top: 4vh;
-    height: 96vh;
-    overflow-y: scroll;
+    margin-top: 4dvh;
+    height: 96dvh;
     background-color: beige;
+    overflow: -moz-hidden-unscrollable;
     margin-left: v-bind(sidebarWidth);
     transition: 0.3s ease;
     width: calc(100vw - v-bind(sidebarWidth));
   }
-
-  body::-webkit-scrollbar{
-    display: none;
+  body{
+    background-color: beige;
+    scrollbar-width: thin;
   }
 </style>
