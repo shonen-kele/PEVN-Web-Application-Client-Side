@@ -8,13 +8,11 @@ export function createArgumentPolicy(body){
     const {argumentError} = argumentTemplate.validate(body.argument)
 
     if(titleError){
-        console.log('There was a title error')
         return {
             errorMessage:'The title is too long or too short',
             error: true
         }
     } else if (argumentError){
-        console.log('There was an argument error')
         return{
             error: true,
             errorMessage:`The argument was either too long or too short 

@@ -1,12 +1,9 @@
 <script setup>
   import {ref} from 'vue'
   import {useRoute} from 'vue-router'
-  import { useArgumentStore } from '@/stores/argument'
-  const store = useArgumentStore()
   const rules = ref([v => v.length <= 5000 || 'Max 5000 characters'])
   const route = useRoute()
   let id = route.params.id
-  console.log(id)
   const {data} = await useFetch('/api/getArgument',{
     method:'POST',
     body:{

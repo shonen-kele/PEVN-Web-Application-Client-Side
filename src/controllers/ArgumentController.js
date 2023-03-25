@@ -10,7 +10,6 @@ export async function createArgument(body){
         title:body.title,
         email:body.email
     }})
-    console.log('The argument instance is ' + argumentInstance)
 
     if(argumentInstance == null){
         await db.sequelize.models.Argument.create({
@@ -40,7 +39,6 @@ export async function displayPersonalArguments(body){
     const argumentInstances = await db.sequelize.models.Argument.findAll({where:{email:body.email}})
     
     if(argumentInstances.length == 0){
-        console.log('Here')
         return {errorMessage:'You have made no argument'}
     } else{
         return {arguments:argumentInstances}
@@ -57,7 +55,6 @@ export async function editArgument(body){
     }
 }
 export async function displayArguments(offset){
-    console.log('offset is ' + offset)
     const {rows} = await db.sequelize.models.Argument.findAndCountAll({
         limit:30,
         offset: offset

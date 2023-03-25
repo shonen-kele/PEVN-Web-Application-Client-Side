@@ -20,8 +20,8 @@ async function register(){
 	error.value = data.value.errorMessage
 	message.value = data.value.message
 	if(message.value){
-		store.token = data.value.token
-		store.sharedEmail = data.value.email
+		store.setToken(data.value.token)
+		store.setEmail(data.value.email)
 	}
 }
 
@@ -33,15 +33,15 @@ async function login(){
 			password:password.value
 		}
 	})
-	console.log(data)
 	error.value = data.value.errorMessage
 	message.value = data.value.message
 	if(message.value){
-		store.sharedEmail = email.value
-		store.token = data.value.token
+		store.setToken(data.value.token)
+		store.setEmail(data.value.email)
+    store.setLoginState(true)
 		router.push('/personal')
 	} else {
-		store.sharedEmail = null
+		store.setEmail(null)
 	}
 }
 

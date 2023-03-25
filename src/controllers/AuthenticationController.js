@@ -13,9 +13,7 @@ export async function register (body){
     ({where:{email:body.email}})
 
     if(userInstance == null){
-        console.log(db.sequelize.models.User.create)
         await db.sequelize.models.User.create(body)
-        console.log("The user has signed in")
         userInstance = await db.sequelize.models.User.findOne({where:{email:body.email}})
         const userJson = userInstance.toJSON()
         return {

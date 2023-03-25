@@ -7,7 +7,6 @@ async function hashPassword (user){
         return
     }
     user.salt = crypto.randomBytes(16).toString('hex')
-    console.log('The salt entered into the database was ' + user.salt)
     const hash = crypto.pbkdf2Sync(user.password,user.salt,1000,64,'sha512')
     .toString('hex')
     user.password = hash

@@ -13,6 +13,7 @@ if(!store.sharedEmail.value){
 }
 function logout(){
   store.sharedEmail.value = null
+  store.setLoginState(false)
   router.push('/')
 }
 function deleteAccount(){

@@ -661,7 +661,6 @@ async function createArgument(body) {
     title: body.title,
     email: body.email
   } });
-  console.log("The argument instance is " + argumentInstance);
   if (argumentInstance == null) {
     await db.sequelize.models.Argument.create({
       email: body.email,
@@ -688,7 +687,6 @@ async function destroyArgument(body) {
 async function displayPersonalArguments(body) {
   const argumentInstances = await db.sequelize.models.Argument.findAll({ where: { email: body.email } });
   if (argumentInstances.length == 0) {
-    console.log("Here");
     return { errorMessage: "You have made no argument" };
   } else {
     return { arguments: argumentInstances };
@@ -705,7 +703,6 @@ async function editArgument(body) {
   }
 }
 async function displayArguments(offset) {
-  console.log("offset is " + offset);
   const { rows } = await db.sequelize.models.Argument.findAndCountAll({
     limit: 30,
     offset
@@ -729,13 +726,11 @@ function createArgumentPolicy(body) {
   const { titleError } = titleTemplate.validate(body.title);
   const { argumentError } = argumentTemplate.validate(body.argument);
   if (titleError) {
-    console.log("There was a title error");
     return {
       errorMessage: "The title is too long or too short",
       error: true
     };
   } else if (argumentError) {
-    console.log("There was an argument error");
     return {
       error: true,
       errorMessage: `The argument was either too long or too short 
@@ -771,9 +766,7 @@ function jwtSignUser(userInstance) {
 async function register(body) {
   let userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
   if (userInstance == null) {
-    console.log(db.sequelize.models.User.create);
     await db.sequelize.models.User.create(body);
-    console.log("The user has signed in");
     userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
     const userJson = userInstance.toJSON();
     return {
@@ -836,7 +829,6 @@ const destroyArgument_post$1 = /*#__PURE__*/Object.freeze({
 
 const displayArguments_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
-  console.log("body.offset is" + body.offset);
   return displayArguments(body.offset);
 });
 
@@ -922,7 +914,6 @@ function registerPolicy(body) {
   }
 }
 function loginPolicy(body) {
-  console.log(body);
   if (body.email == void 0) {
     return { error: true, errorMessage: "You have not entered an email" };
   }

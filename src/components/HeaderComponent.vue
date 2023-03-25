@@ -24,7 +24,7 @@
     </div>
 
     <v-btn 
-      v-if="loginStore.sharedEmail"
+      v-if="loginStore.isUserLoggedIn"
       id="userSettings"
       variant="tonal"
       @click="()=>{

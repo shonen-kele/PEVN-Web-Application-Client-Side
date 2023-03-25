@@ -38,7 +38,6 @@ export function registerPolicy (body){
     }
 }
 export function loginPolicy (body){
-    console.log(body)
     if (body.email == undefined){
         return {error:true, errorMessage:'You have not entered an email'}
     }
