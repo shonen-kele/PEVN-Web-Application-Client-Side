@@ -509,7 +509,7 @@ const _lazy_G9BrvS = () => Promise.resolve().then(function () { return deleteAcc
 const _lazy_CIdjjs = () => Promise.resolve().then(function () { return destroyArgument_post$1; });
 const _lazy_iGuqi9 = () => Promise.resolve().then(function () { return displayArguments_post$1; });
 const _lazy_dRxiMS = () => Promise.resolve().then(function () { return displayPersonalArguments_post$1; });
-const _lazy_iRsgXc = () => Promise.resolve().then(function () { return getArgument$1; });
+const _lazy_yci3mR = () => Promise.resolve().then(function () { return getArgument_post$1; });
 const _lazy_7zOVQh = () => Promise.resolve().then(function () { return getEmail_post; });
 const _lazy_HWojRq = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_48xnwD = () => Promise.resolve().then(function () { return register_post$1; });
@@ -522,7 +522,7 @@ const handlers = [
   { route: '/api/destroyArgument', handler: _lazy_CIdjjs, lazy: true, middleware: false, method: "post" },
   { route: '/api/displayArguments', handler: _lazy_iGuqi9, lazy: true, middleware: false, method: "post" },
   { route: '/api/displayPersonalArguments', handler: _lazy_dRxiMS, lazy: true, middleware: false, method: "post" },
-  { route: '/api/getArgument', handler: _lazy_iRsgXc, lazy: true, middleware: false, method: undefined },
+  { route: '/api/getArgument', handler: _lazy_yci3mR, lazy: true, middleware: false, method: "post" },
   { route: '/api/getEmail', handler: _lazy_7zOVQh, lazy: true, middleware: false, method: "post" },
   { route: '/api/login', handler: _lazy_HWojRq, lazy: true, middleware: false, method: "post" },
   { route: '/api/register', handler: _lazy_48xnwD, lazy: true, middleware: false, method: "post" },
@@ -657,12 +657,12 @@ async function createArgument(body) {
   const argumentCount = await db.sequelize.models.Argument.count({
     where: { email: body.email }
   });
-  const argumentInstance2 = await db.sequelize.models.Argument.findOne({ where: {
+  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: {
     title: body.title,
     email: body.email
   } });
-  console.log("The argument instance is " + argumentInstance2);
-  if (argumentInstance2 == null) {
+  console.log("The argument instance is " + argumentInstance);
+  if (argumentInstance == null) {
     await db.sequelize.models.Argument.create({
       email: body.email,
       title: body.title,
@@ -675,13 +675,13 @@ async function createArgument(body) {
   }
 }
 async function destroyArgument(body) {
-  const argumentInstance2 = await db.sequelize.models.Argument.findOne({ where: {
+  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: {
     id: body.id
   } });
-  if (argumentInstance2 == null) {
+  if (argumentInstance == null) {
     return { errorMessage: "The argument does not exist" };
   } else {
-    await argumentInstance2.destroy();
+    await argumentInstance.destroy();
     return { message: "The argument was destroyed" };
   }
 }
@@ -695,10 +695,10 @@ async function displayPersonalArguments(body) {
   }
 }
 async function editArgument(body) {
-  const argumentInstance2 = await db.sequelize.models.Argument.findOne({ where: { id: body.id } });
-  if (argumentInstance2) {
-    await argumentInstance2.update({ title: body.title });
-    await argumentInstance2.update({ argument: body.argument });
+  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: { id: body.id } });
+  if (argumentInstance) {
+    await argumentInstance.update({ title: body.title });
+    await argumentInstance.update({ argument: body.argument });
     return { error: false };
   } else {
     return { error: true };
@@ -855,8 +855,8 @@ const displayPersonalArguments_post$1 = /*#__PURE__*/Object.freeze({
       default: displayPersonalArguments_post
 });
 
-async function getArgument$2(id) {
-  argumentInstance = await db.sequelize.models.Argument.findOne({
+async function getArgument(id) {
+  const argumentInstance = await db.sequelize.models.Argument.findOne({
     where: { id }
   });
   if (argumentInstance) {
@@ -870,14 +870,14 @@ async function getArgument$2(id) {
   }
 }
 
-const getArgument = defineEventHandler((event) => {
-  const { id } = readBody(event);
-  return getArgument$2(id);
+const getArgument_post = defineEventHandler(async (event) => {
+  const { id } = await readBody(event);
+  return getArgument(id);
 });
 
-const getArgument$1 = /*#__PURE__*/Object.freeze({
+const getArgument_post$1 = /*#__PURE__*/Object.freeze({
       __proto__: null,
-      default: getArgument
+      default: getArgument_post
 });
 
 const getEmail_post = /*#__PURE__*/Object.freeze({

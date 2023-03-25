@@ -65,7 +65,7 @@ export async function displayArguments(offset){
     return {arguments:rows}
 }
 export async function getArgument(id){
-    argumentInstance = await db.sequelize.models.Argument.findOne({
+    const argumentInstance = await db.sequelize.models.Argument.findOne({
         where:{id:id}
     })
     if(argumentInstance){
