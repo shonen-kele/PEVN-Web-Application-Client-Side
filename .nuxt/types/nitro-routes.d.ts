@@ -20,6 +20,9 @@ declare module 'nitropack' {
     '/api/displayPersonalArguments': {
       'post': Awaited<ReturnType<typeof import('../../src/server/api/displayPersonalArguments.post').default>>
     }
+    '/api/getArgument': {
+      'default': Awaited<ReturnType<typeof import('../../src/server/api/getArgument').default>>
+    }
     '/api/getEmail': {
       'post': Awaited<ReturnType<typeof import('../../src/server/api/getEmail.post').default>>
     }

@@ -16,17 +16,20 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",
     "@nuxt/eslint-config": "^0.1.1",
+    "@nuxt/test-utils": "^3.3.1",
     "@vitejs/plugin-vue": "^4.0.0",
     "babel-eslint": "^8.2.6",
     "eslint": "8.33.0",
     "eslint-plugin-vue": "^9.9.0",
     "nuxt-vite": "^0.3.5",
     "vite": "^4.1.1",
-    "vite-plugin-vuetify": "^1.0.2"
+    "vite-plugin-vuetify": "^1.0.2",
+    "vitest": "^0.29.7"
   },
   "scripts": {
     "dev": "nuxt dev",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest"
   },
   "name": "client",
   "version": "1.0.0",

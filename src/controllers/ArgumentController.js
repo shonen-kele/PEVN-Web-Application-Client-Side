@@ -64,3 +64,17 @@ export async function displayArguments(offset){
     })
     return {arguments:rows}
 }
+export async function getArgument(id){
+    argumentInstance = await db.sequelize.models.Argument.findOne({
+        where:{id:id}
+    })
+    if(argumentInstance){
+        return {
+            argumentId: argumentInstance.id,
+            argumentBody: argumentInstance.argument,
+            argumentTitle: argumentInstance.title
+        }
+    } else {
+        return {errorMessage:`The argument with id ${id} does not exist or there was an internal error`}
+    }
+}

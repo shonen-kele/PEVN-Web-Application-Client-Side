@@ -1,5 +1,5 @@
 <script setup>
-  import { ref,onMounted,computed } from 'vue';
+  import { ref,onMounted } from 'vue';
   import {useRouter} from 'vue-router'
   import { useLoginStore } from '@/stores/login'
   
@@ -54,7 +54,7 @@
   }
 
   async function destroyArgument(idNumber){
-    const {data} = await useFetch('/api/destroyArgument',{
+    await useFetch('/api/destroyArgument',{
       method:'POST',
       body:{
         id: idNumber
@@ -205,7 +205,7 @@
 
   .v-card{
     margin: 10px;
-    color:rgb(85, 42, 37)
+    color:rgb(85, 42, 37);
   }
 
   div{

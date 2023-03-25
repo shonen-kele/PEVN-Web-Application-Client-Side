@@ -48,50 +48,50 @@ async function login(){
 </script>
 
 <template>
-	<form>
-		<v-text-field 
-		v-model="email"
-		type="email"
-		name="email"
-		placeholder="email"
-		variant="outlined"
-		/>
-		<br>
-		<v-text-field 
-		v-model="password"
-		type="password"
-		name="password"
-		placeholder="password"
-		variant="outlined"
-		/>
-		<br>
-		<v-btn 
-		id="login-button"
-		type="button"
-		variant="tonal"
-		@click="login"
-		>
-		Login
-	</v-btn>
-	<v-btn 
-	id="register-button"
-	type="button"
-	variant="tonal"
-	@click="register"
-	>
-	Register
-</v-btn>
-<br>
-<div
-v-if="error"
-class="error"
-v-text="error"
-/>
-<div
-v-if="message"
-v-text="error"
-/>
-</form>
+  <form>
+    <v-text-field 
+      v-model="email"
+      type="email"
+      name="email"
+      placeholder="email"
+      variant="outlined"
+    />
+    <br>
+    <v-text-field 
+      v-model="password"
+      type="password"
+      name="password"
+      placeholder="password"
+      variant="outlined"
+    />
+    <br>
+    <v-btn 
+      id="login-button"
+      type="button"
+      variant="tonal"
+      @click="login"
+    >
+      Login
+    </v-btn>
+    <v-btn 
+      id="register-button"
+      type="button"
+      variant="tonal"
+      @click="register"
+    >
+      Register
+    </v-btn>
+    <br>
+    <div
+      v-if="error"
+      class="error"
+      v-text="error"
+    />
+    <div
+      v-if="message"
+      v-text="error"
+    />
+  </form>
 </template>
 
 <style>

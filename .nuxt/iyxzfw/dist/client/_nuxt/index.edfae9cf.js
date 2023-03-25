@@ -1,0 +1,1 @@
+import{_ as e,f as n,o as s}from"./entry.00c971bc.js";const _={};function c(t,o){return s(),n("p",null,"This is the home page")}const r=e(_,[["render",c],["__file","C:/Users/kmba2/Coding/Projects in coding/Yessay/client/src/pages/index.vue"]]);export{r as default};

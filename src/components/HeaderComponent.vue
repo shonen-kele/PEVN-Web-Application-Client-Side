@@ -1,21 +1,12 @@
 <script setup>
   import { useLoginStore } from '@/stores/login';
   import { useRouter } from 'vue-router'
-  import { useSidebarWidthStore } from '@/stores/sidebarWidth';
-  const router = useRouter()
-  const sidebarStore = useSidebarWidthStore()
   const loginStore = useLoginStore()
+  const router = useRouter()
 </script>
 
 <template>
   <header>
-    <div
-      id="sidebarButton"
-      @click="sidebarStore.toggleSidebar"
-    >
-      &lt; &gt;
-    </div>
-
     <div id="search">
       <v-text-field 
         id="searchBar"
@@ -47,7 +38,9 @@
       v-else 
       id="login"
       variant="tonal"
-      @click="()=>{router.push({path:'/login'})}"
+      @click="()=>{
+        router.push('/login')
+      }"
     >
       Login
     </v-btn>
@@ -63,7 +56,7 @@
     width: 100vw;
     margin-top: 0;
     background-image: linear-gradient(to bottom, rgb(211, 89, 89), beige);
-    padding-left: 50px;
+    padding-left: 130px;
     padding-right: 50px;
   }
   input{

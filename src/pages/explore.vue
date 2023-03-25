@@ -1,10 +1,12 @@
 <script setup>
-  import {ref, onBeforeMount, onMounted, getCurrentInstance, nextTick} from 'vue'
-  import { useElementBounding } from '@vueuse/core'
+  import {ref, onMounted, nextTick} from 'vue'
+  import {useRouter} from 'vue-router'
+  import {useArgumentStore} from '@/stores/argument'
 
+  const store = useArgumentStore()
+  const router = useRouter()
   const columns = ref(null)
   const vCards = ref(null)
-  const instance = getCurrentInstance()
   const argumentContainer = ref([
     {id:1, arguments:[]},
     {id:2, arguments:[]},
@@ -35,7 +37,6 @@
         const childBottom = columns.value[colIndex].lastElementChild.getBoundingClientRect().bottom
         emptySpaces[colIndex] = columnBottom - childBottom
       }
-      console.log(emptySpaces)
       let smallestSpace = Math.max.apply(Math, emptySpaces)
       argumentContainer.value[emptySpaces.indexOf(smallestSpace)].arguments.push(args[index])
       await nextTick()
@@ -61,7 +62,12 @@
       variant="tonal">
         <v-card-actions>
           <v-flex>
-            <v-btn variant="text">Rebute</v-btn>
+            <v-btn variant="text" @click="()=>{
+              store.argumentTitle = argument.title
+              store.argumentBody = argument.argument
+              store.email = argument.email
+              router.push(`/arena-${argument.id}`)
+            }">Rebute</v-btn>
             <v-btn variant="text">Entail</v-btn>
             <v-btn variant="text">Comment</v-btn>
           </v-flex>

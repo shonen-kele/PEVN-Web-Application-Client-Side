@@ -21,19 +21,23 @@
   #not-header{
     display: flex;
     flex-direction: row;
-    height: 96dvh;
+    height: 96%;
   }
   #router-view-container{
     margin-top: 4dvh;
-    height: 96dvh;
+    height: 96%;
     background-color: beige;
     overflow: -moz-hidden-unscrollable;
     margin-left: v-bind(sidebarWidth);
     transition: 0.3s ease;
-    width: calc(100vw - v-bind(sidebarWidth));
+    width: calc(100% - v-bind(sidebarWidth));
   }
   body{
     background-color: beige;
     scrollbar-width: thin;
+  }
+
+  .v-card{
+    color: rgb(85, 42, 37);
   }
 </style>

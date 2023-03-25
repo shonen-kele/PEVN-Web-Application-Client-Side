@@ -7,17 +7,16 @@
 </script>
 
 <template>
+  <div  
+    id="sidebar-button"
+    @click="sidebarStore.toggleSidebar"
+  >
+    &lt; &gt;
+  </div>
   <div
     id="sidebar-container"
     :style="{width:sidebarStore.sidebarWidth}"
   >
-    <div 
-      v-if="!sidebarStore.collapsed" 
-      id="sidebarButton"
-      @click="sidebarStore.toggleSidebar"
-    >
-      &lt; &gt;
-    </div>
     <nav v-if="!sidebarStore.collapsed">
       <NuxtLink to="/">
         Home
@@ -57,7 +56,7 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    height: 100vh;
+    height: 100%;
     margin-bottom: 0;
     bottom: 0;
 
@@ -67,11 +66,18 @@
   #sidebar-container nav{
     display:grid;
     justify-items: center;
+    margin-top: 60px;
   }
 
-  #sidebar-container div{
-    width: inherit;
-    height: 60px;
-    text-align: center;
+  #sidebar-button{
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    top: 0px;
+    left: 59px;
+    width: 60px;
+    height: 30px;
+    z-index: 2;
   }
 </style>
