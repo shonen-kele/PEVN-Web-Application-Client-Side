@@ -18,10 +18,22 @@ export default defineNuxtConfig({
             allow:[
                 '@/components',
             ]
+        },
+        test:{
+            alias:{
+                '@': path.resolve(__dirname,'./src'),
+                '@test': path.resolve(__dirname,'./tests')
+            },
+            root:'./',
+            environment:'nuxt'
         }
+
     }},
     srcDir: 'src/',
     components:[{path:'@/components/special'}],
-    modules:['@pinia/nuxt'],
-    test:true
+    modules:[
+        '@pinia/nuxt',
+        '@nuxt/devtools',
+        '@vueuse/nuxt'
+    ]
 })

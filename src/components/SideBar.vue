@@ -26,7 +26,7 @@
       </NuxtLink>
 
       <NuxtLink 
-        v-if="loginStore.sharedEmail" 
+        v-if="loginStore.loginState" 
         to="/personal"
       >
         Personal
@@ -34,7 +34,7 @@
 
       <NuxtLink
         v-else
-        to="/login"
+        to="/authentication"
       >
         Personal
       </NuxtLink>

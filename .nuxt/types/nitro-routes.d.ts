@@ -23,14 +23,14 @@ declare module 'nitropack' {
     '/api/getArgument': {
       'post': Awaited<ReturnType<typeof import('../../src/server/api/getArgument.post').default>>
     }
-    '/api/getEmail': {
-      'post': Awaited<ReturnType<typeof import('../../src/server/api/getEmail.post').default>>
-    }
     '/api/login': {
       'post': Awaited<ReturnType<typeof import('../../src/server/api/login.post').default>>
     }
     '/api/register': {
       'post': Awaited<ReturnType<typeof import('../../src/server/api/register.post').default>>
+    }
+    '/api/verifyToken': {
+      'post': Awaited<ReturnType<typeof import('../../src/server/api/verifyToken.post').default>>
     }
     '/__nuxt_error': {
       'default': Awaited<ReturnType<typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>

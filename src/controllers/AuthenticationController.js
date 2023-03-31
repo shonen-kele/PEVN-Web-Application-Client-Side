@@ -1,6 +1,6 @@
 //controllers are used for declaring all the end points
 import {db} from '@/models/index.js'
-import jwt from 'jsonwebtoken'
+import jwt, { decode } from 'jsonwebtoken'
 function jwtSignUser(userInstance){
     const ONE_WEEK = 60 * 60 * 24 * 7
     return jwt.sign(userInstance, process.env.JWT_SECRET,{
@@ -54,5 +54,27 @@ export async function deleteAccount(body){
     } else {
         userInstance.destroy()
         return {message:'Your account was successfully deleted'}
+    }
+}
+export async function verifyToken(token){
+    let verified
+    let decoded
+    let exp
+    jwt.verify(token, process.env.JWT_SECRET,function(err,result){
+        if(!err){
+            decoded = result
+            exp = result.exp
+        } else {
+            console.log(err)
+        }
+    })
+    if (Date.now() >= exp * 1000 || decoded==undefined){
+        verified = false
+    } else {
+        verified = true
+    }
+    return {
+        res:decoded,
+        ver:verified
     }
 }

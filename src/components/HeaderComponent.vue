@@ -1,8 +1,35 @@
 <script setup>
   import { useLoginStore } from '@/stores/login';
   import { useRouter } from 'vue-router'
+  import { toRaw, watch } from 'vue'
   const loginStore = useLoginStore()
+  const email = ref()
   const router = useRouter()
+
+  async function fetchTokenVerification(){
+    console.log('before useFetch',loginStore.tokenState.token)
+    await nextTick()
+    const {data} = await useFetch('/api/verifyToken',{
+      method:'POST',
+      body:{
+        token: loginStore.tokenState.token
+      }
+    })
+    console.log('logging data',data)
+    if(toRaw(data.value.ver)){
+      email.value = toRaw(data.value).res.email
+      loginStore.setLoginState(true)
+    }
+  }
+  
+  onBeforeMount(async ()=>{
+    fetchTokenVerification()
+  })
+
+  watch(loginStore.tokenState, async ()=>{
+    fetchTokenVerification()
+  })
+  
 </script>
 
 <template>
@@ -24,14 +51,14 @@
     </div>
 
     <v-btn 
-      v-if="loginStore.isUserLoggedIn"
+      v-if="loginStore.loginState"
       id="userSettings"
       variant="tonal"
       @click="()=>{
         router.push('/settings')
       }"
     >
-      {{ loginStore.sharedEmail }}
+      {{ email }}
     </v-btn>
 
     <v-btn
@@ -39,10 +66,10 @@
       id="login"
       variant="tonal"
       @click="()=>{
-        router.push('/login')
+        router.push('/authentication')
       }"
     >
-      Login
+      Login or Register
     </v-btn>
   </header>
 </template>

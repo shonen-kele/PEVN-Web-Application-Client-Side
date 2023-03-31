@@ -1,5 +1,5 @@
 <script setup>
-  import { ref,onMounted } from 'vue';
+  import { nextTick, ref, toRaw } from 'vue';
   import {useRouter} from 'vue-router'
   import { useLoginStore } from '@/stores/login'
   
@@ -14,32 +14,48 @@
   const isOpen = ref(false)
   const isEditting = ref(false)
   const editId = ref()
-
-  if(!store.sharedEmail.value){
-    router.push('/login')
-  } else {
-    onMounted(displayPersonalArguments)
-  }
+  let email
 
   async function displayPersonalArguments(){
     const {data} = await useFetch('/api/displayPersonalArguments',{
       method:'POST',
       body:{
-        email:store.sharedEmail.value
+        email:email
       }
     })
+    console.log('personal arguments data',data)
     error2.value = data.value.errorMessage
     personalArguments.value = []
-    data.value.arguments.forEach(argument => {
-      personalArguments.value.push(argument)
-    });
+    if(data.value.arguments){
+      data.value.arguments.forEach(argument => {
+        personalArguments.value.push(argument)
+      })
+    }
   }
+
+  onBeforeMount(async ()=>{
+    await nextTick()
+    const {data} = await useFetch('/api/verifyToken',{
+      method:'POST',
+      body:{
+        token: store.tokenState.token
+      }
+    })
+
+    if(!toRaw(data.value).ver){
+      router.push('/authentication')
+    } else {
+      email = toRaw(data.value).res.email
+      displayPersonalArguments()
+    }
+  })
+  
 
   async function createArgument(){
     const {data} = await useFetch('/api/createArgument',{
       method:'POST',
       body:{
-        email: store.sharedEmail.value,
+        email: email,
         title: argumentTitle.value,
         argument: argumentBody.value
       }

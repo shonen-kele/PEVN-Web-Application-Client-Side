@@ -1,19 +1,32 @@
-import {defineStore} from 'pinia'
-import { ref } from 'vue'
+import {defineStore, skipHydrate} from 'pinia'
+import { ref, computed } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 
-export const useLoginStore = defineStore('login',()=>{
-    const token = ref()
-    const sharedEmail = ref()
-    const isUserLoggedIn = ref(false)
-    function setToken(token){
-        token.value = token
-    }
-    function setEmail(email){
-        sharedEmail.value = email
+
+export const useLoginStore = defineStore('login', ()=>{
+    const tokenState = useLocalStorage('token-store',{
+        token:'default'
+    })
+
+    const loginState = ref(false)
+
+    function setToken(tokenArgs){
+        tokenState.value.token = tokenArgs
+        console.log('after setting tokenArgs', tokenState)
     }
 
-    function setLoginState(boolean){
-        isUserLoggedIn.value = boolean
+    const getToken = computed(()=>{
+        return tokenState
+    })
+
+    function setLoginState(isUserLoggedIn){
+        loginState.value = isUserLoggedIn
     }
-    return {token,sharedEmail,setToken,setEmail,setLoginState}
+    return {
+        tokenState: skipHydrate(tokenState),
+        setToken,
+        getToken,
+        setLoginState,
+        loginState
+    }
 })

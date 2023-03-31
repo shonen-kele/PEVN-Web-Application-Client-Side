@@ -510,9 +510,9 @@ const _lazy_CIdjjs = () => Promise.resolve().then(function () { return destroyAr
 const _lazy_iGuqi9 = () => Promise.resolve().then(function () { return displayArguments_post$1; });
 const _lazy_dRxiMS = () => Promise.resolve().then(function () { return displayPersonalArguments_post$1; });
 const _lazy_yci3mR = () => Promise.resolve().then(function () { return getArgument_post$1; });
-const _lazy_7zOVQh = () => Promise.resolve().then(function () { return getEmail_post; });
 const _lazy_HWojRq = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_48xnwD = () => Promise.resolve().then(function () { return register_post$1; });
+const _lazy_ZtYpl6 = () => Promise.resolve().then(function () { return verifyToken_post$1; });
 const _lazy_ynvccF = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
@@ -523,9 +523,9 @@ const handlers = [
   { route: '/api/displayArguments', handler: _lazy_iGuqi9, lazy: true, middleware: false, method: "post" },
   { route: '/api/displayPersonalArguments', handler: _lazy_dRxiMS, lazy: true, middleware: false, method: "post" },
   { route: '/api/getArgument', handler: _lazy_yci3mR, lazy: true, middleware: false, method: "post" },
-  { route: '/api/getEmail', handler: _lazy_7zOVQh, lazy: true, middleware: false, method: "post" },
   { route: '/api/login', handler: _lazy_HWojRq, lazy: true, middleware: false, method: "post" },
   { route: '/api/register', handler: _lazy_48xnwD, lazy: true, middleware: false, method: "post" },
+  { route: '/api/verifyToken', handler: _lazy_ZtYpl6, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_ynvccF, lazy: true, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_ynvccF, lazy: true, middleware: false, method: undefined }
 ];
@@ -806,6 +806,28 @@ async function deleteAccount(body) {
     return { message: "Your account was successfully deleted" };
   }
 }
+async function verifyToken(token) {
+  let verified;
+  let decoded;
+  let exp;
+  jwt.verify(token, process.env.JWT_SECRET, function(err, result) {
+    if (!err) {
+      decoded = result;
+      exp = result.exp;
+    } else {
+      console.log(err);
+    }
+  });
+  if (Date.now() >= exp * 1e3 || decoded == void 0) {
+    verified = false;
+  } else {
+    verified = true;
+  }
+  return {
+    res: decoded,
+    ver: verified
+  };
+}
 
 const deleteAccount_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -870,10 +892,6 @@ const getArgument_post = defineEventHandler(async (event) => {
 const getArgument_post$1 = /*#__PURE__*/Object.freeze({
       __proto__: null,
       default: getArgument_post
-});
-
-const getEmail_post = /*#__PURE__*/Object.freeze({
-      __proto__: null
 });
 
 function registerPolicy(body) {
@@ -954,6 +972,16 @@ const register_post = defineEventHandler(async (event) => {
 const register_post$1 = /*#__PURE__*/Object.freeze({
       __proto__: null,
       default: register_post
+});
+
+const verifyToken_post = defineEventHandler(async (event) => {
+  const { token } = await readBody(event);
+  return verifyToken(token);
+});
+
+const verifyToken_post$1 = /*#__PURE__*/Object.freeze({
+      __proto__: null,
+      default: verifyToken_post
 });
 
 const appRootId = "__nuxt";

@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue'
+import {nextTick, ref, toRaw} from 'vue'
 import {useRouter} from 'vue-router'
 import { useLoginStore } from '@/stores/login'
 
@@ -8,17 +8,25 @@ const router = useRouter()
 const wishToDelete = ref(false)
 const passInput = ref()
 const error = ref()
-if(!store.sharedEmail.value){
-  router.push('/')
-}
+
+onBeforeMount(async ()=>{
+  await nextTick()
+  const {data} = await useFetch('/api/verifyToken',{
+    method:'POST',
+    body:{
+      token: store.tokenState.token
+    }
+  })
+  if(!toRaw(data.value).ver){
+    router.push('/')
+  }
+})
 function logout(){
-  store.sharedEmail.value = null
+  store.tokenState.token = null
   store.setLoginState(false)
   router.push('/')
 }
-function deleteAccount(){
-  wishToDelete.value = true
-}
+
 async function confirmDelete(){
   const {data} = useFetch('/api/deleteAccount',{
     method:'POST',
@@ -35,31 +43,48 @@ async function confirmDelete(){
 </script>
 
 <template>
-  <button @click="logout">
-    Logout
-  </button>
-  
-  <button @click="deleteAccount">
-    Delete account
-  </button>
-  <br>
-  <div v-if="wishToDelete">
-    <input v-model="passInput">
-    <br>
-    <button @click="confirmDelete">
-      Confirm Account Deleteion
-    </button>
-    <button @click="()=>{wishToDelete = false}">
-      Cancel Account Deleteion
-    </button> 
-    <br>
-    <div
-    v-if="error"
-    class="error"
+  <div id="settings root">
+    <v-btn 
+      @click="logout"
+      variant="tonal"
     >
-    {{ error }}
+      Logout
+    </v-btn>
+    
+    <v-btn 
+      @click="()=>wishToDelete = true"
+      variant="tonal"
+    >
+      Delete account
+    </v-btn>
+    <br>
+    <div v-if="wishToDelete">
+      <v-text-field v-model="passInput"/>
+      <br>
+      <div id="confirm-buttons">
+        <v-btn 
+          @click="confirmDelete"
+          variant="tonal"
+        >
+          Confirm Account Deleteion
+        </v-btn>
+        <v-btn 
+          @click="()=>{wishToDelete = false}"
+          variant="tonal"
+        >
+          Cancel Account Deleteion
+        </v-btn>
+      </div>
+       
+      <br>
+      <div
+        v-if="error"
+        class="error"
+      >
+        {{ error }}
+      </div>
+    </div>
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -70,13 +95,25 @@ input{
   border-radius: 5px;
   text-align: center;
 }
-button{
-  border-style: solid;
-  height: 50px;
+
+.v-btn{
+  margin: 10px;
 }
-div, button{
+
+#confirm-buttons{
+  display: flex;
+  flex-direction: row;
+}
+
+#settings-root, button{
   margin-top: 4dvh;
   margin-left: auto;
   margin-right: auto;
 }
+
+#settings-root{
+  margin-left: auto;
+  margin-right: auto;
+}
+
 </style>
