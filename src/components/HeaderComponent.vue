@@ -1,33 +1,18 @@
 <script setup>
   import { useLoginStore } from '@/stores/login';
   import { useRouter } from 'vue-router'
-  import { toRaw, watch } from 'vue'
+  import { toRaw, watch, nextTick } from 'vue'
+
   const loginStore = useLoginStore()
   const email = ref()
   const router = useRouter()
-
-  async function fetchTokenVerification(){
-    console.log('before useFetch',loginStore.tokenState.token)
-    await nextTick()
-    const {data} = await useFetch('/api/verifyToken',{
-      method:'POST',
-      body:{
-        token: loginStore.tokenState.token
-      }
-    })
-    console.log('logging data',data)
-    if(toRaw(data.value.ver)){
-      email.value = toRaw(data.value).res.email
-      loginStore.setLoginState(true)
-    }
-  }
   
   onBeforeMount(async ()=>{
-    fetchTokenVerification()
+    loginStore.fetchTokenVerification()
   })
 
   watch(loginStore.tokenState, async ()=>{
-    fetchTokenVerification()
+    loginStore.fetchTokenVerification()
   })
   
 </script>
@@ -57,8 +42,9 @@
       @click="()=>{
         router.push('/settings')
       }"
+      v-cloak
     >
-      {{ email }}
+      {{ loginStore.emailState }}
     </v-btn>
 
     <v-btn
@@ -104,5 +90,9 @@
     flex-direction: row;
     justify-content: center;
     
+  }
+
+  [v-cloak]{
+    display: none;
   }
 </style>

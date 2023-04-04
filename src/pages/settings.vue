@@ -3,7 +3,7 @@ import {nextTick, ref, toRaw} from 'vue'
 import {useRouter} from 'vue-router'
 import { useLoginStore } from '@/stores/login'
 
-const store = useLoginStore()
+const loginStore = useLoginStore()
 const router = useRouter()
 const wishToDelete = ref(false)
 const passInput = ref()
@@ -11,19 +11,14 @@ const error = ref()
 
 onBeforeMount(async ()=>{
   await nextTick()
-  const {data} = await useFetch('/api/verifyToken',{
-    method:'POST',
-    body:{
-      token: store.tokenState.token
-    }
-  })
-  if(!toRaw(data.value).ver){
+  loginStore.fetchTokenVerification()
+  if(!loginStore.loginState){
     router.push('/')
   }
 })
 function logout(){
-  store.tokenState.token = null
-  store.setLoginState(false)
+  loginStore.tokenState.token = null
+  loginStore.setLoginState(false)
   router.push('/')
 }
 
@@ -43,7 +38,7 @@ async function confirmDelete(){
 </script>
 
 <template>
-  <div id="settings root">
+  <section id="settings root">
     <v-btn 
       @click="logout"
       variant="tonal"
@@ -84,7 +79,7 @@ async function confirmDelete(){
         {{ error }}
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>

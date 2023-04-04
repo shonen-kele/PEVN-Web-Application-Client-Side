@@ -1,7 +1,8 @@
 <script setup>
-  import {ref, onMounted, nextTick} from 'vue'
+  import {ref, onMounted, nextTick, h} from 'vue'
   import {useRouter} from 'vue-router'
   import {useArgumentStore} from '@/stores/argument'
+  import { useMouse } from '@vueuse/core'
 
   const store = useArgumentStore()
   const router = useRouter()
@@ -45,36 +46,40 @@
 </script>
 
 <template>
-  <h1>The explore page</h1>
-  <v-btn @click="()=>displayArguments">Refresh page</v-btn>
-  <div id="argument-container">
-    <div 
-    v-for="column in argumentContainer" 
-    :key="column.id"
-    ref="columns"
-    class="column">
-      <v-card 
-      v-for="argument in column.arguments" 
-      :title="argument.title"
-      :subtitle="argument.email"
-      :text="argument.argument"
-      ref="vCards"
-      variant="tonal">
-        <v-card-actions>
-          <v-flex>
-            <v-btn variant="text" @click="()=>{
-              store.argumentTitle = argument.title
-              store.argumentBody = argument.argument
-              store.email = argument.email
-              router.push(`/arena-${argument.id}`)
-            }">Rebute</v-btn>
-            <v-btn variant="text">Entail</v-btn>
-            <v-btn variant="text">Comment</v-btn>
-          </v-flex>
-        </v-card-actions>
-      </v-card>
+  <section id="explore-root">
+    <h1>The explore page</h1>
+    <v-btn @click="()=>displayArguments">Refresh page</v-btn>
+    <div id="argument-container">
+      <div 
+      v-for="column in argumentContainer" 
+      :key="column.id"
+      ref="columns"
+      class="column">
+        <v-card 
+        v-for="argument in column.arguments" 
+        :subtitle="argument.email"
+        :text="argument.argument"
+        :title="argument.title"
+        ref="vCards"
+        variant="tonal">
+          <v-card-actions>
+            <v-flex>
+              <v-btn variant="text" @click="()=>{
+                store.argumentTitle = argument.title
+                store.argumentBody = argument.argument
+                store.email = argument.email
+                router.push(`/arena-${argument.id}`)
+              }">Rebute</v-btn>
+              <v-btn variant="text">Entail</v-btn>
+              <v-btn variant="text">Comment</v-btn>
+              <v-btn variant="text">Save</v-btn>
+            </v-flex>
+          </v-card-actions>
+        </v-card>
+      </div>
     </div>
-  </div>
+  </section>
+  
 </template>
 
 <style scoped>

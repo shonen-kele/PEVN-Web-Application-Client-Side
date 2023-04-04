@@ -18,7 +18,7 @@
 </script>
 
 <template>
-  <div id="arena-root">
+  <section id="arena-root">
     <div v-if="!paramsError">
       <h3>{{ argumentTitle }}</h3>
       <div id="comparison">
@@ -43,7 +43,7 @@
       </div>
     </div>
     <h1 v-else>{{ paramsError }}</h1>
-  </div>
+  </section>
   
 </template>
 

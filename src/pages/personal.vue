@@ -3,7 +3,7 @@
   import {useRouter} from 'vue-router'
   import { useLoginStore } from '@/stores/login'
   
-  const store = useLoginStore()
+  const loginStore = useLoginStore()
   const router = useRouter()
   const argumentTitle = ref()
   const argumentBody = ref()
@@ -14,13 +14,12 @@
   const isOpen = ref(false)
   const isEditting = ref(false)
   const editId = ref()
-  let email
 
   async function displayPersonalArguments(){
     const {data} = await useFetch('/api/displayPersonalArguments',{
       method:'POST',
       body:{
-        email:email
+        email:loginStore.emailState
       }
     })
     console.log('personal arguments data',data)
@@ -35,17 +34,11 @@
 
   onBeforeMount(async ()=>{
     await nextTick()
-    const {data} = await useFetch('/api/verifyToken',{
-      method:'POST',
-      body:{
-        token: store.tokenState.token
-      }
-    })
+    loginStore.fetchTokenVerification()
 
-    if(!toRaw(data.value).ver){
+    if(!loginStore.loginState){
       router.push('/authentication')
     } else {
-      email = toRaw(data.value).res.email
       displayPersonalArguments()
     }
   })
@@ -55,7 +48,7 @@
     const {data} = await useFetch('/api/createArgument',{
       method:'POST',
       body:{
-        email: email,
+        email: loginStore.emailState,
         title: argumentTitle.value,
         argument: argumentBody.value
       }
@@ -103,7 +96,7 @@
 </script>
 
 <template>
-  <div id="argument-inputs">
+  <section id="argument-inputs">
     <!--text field/title-->
     <v-text-field 
       id="argument-title" 
@@ -214,7 +207,7 @@
         </v-card-actions>
       </v-card>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>

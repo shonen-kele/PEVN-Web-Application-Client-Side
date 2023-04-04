@@ -1,6 +1,6 @@
 <script setup>
 import {useRouter} from 'vue-router'
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { useLoginStore } from '@/stores/login'
 
 const router = useRouter()
@@ -45,10 +45,17 @@ async function register(email,password){
 	}
 }
 
+onBeforeMount(()=>{
+	loginStore.fetchTokenVerification()
+	if(loginStore.loginState){
+		router.push('/personal')
+	}
+})
+
 </script>
 
 <template>
-  <div id="login-register">
+  <section id="login-register">
 		<div
 			id="login-form"
 			v-if="isLoginForm"
@@ -91,7 +98,7 @@ async function register(email,password){
       v-if="message"
       :text="error"
     ></div>
-  </div>
+  </section>
 </template>
 
 <style scoped>
