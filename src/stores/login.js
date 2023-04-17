@@ -1,6 +1,7 @@
 import {defineStore, skipHydrate} from 'pinia'
 import { ref, computed, nextTick } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
+import {api} from '@/services/Api'
 
 
 export const useLoginStore = defineStore('login', ()=>{
@@ -13,28 +14,28 @@ export const useLoginStore = defineStore('login', ()=>{
     const emailState = ref()
 
     async function fetchTokenVerification(){
-        console.log('before useFetch',tokenState.value.token)
-        await nextTick()
-        const {data} = await useFetch('/api/verifyToken',{
-            method:'POST',
-            body:{
-            token: tokenState.value.token
-            }
-        })
-        console.log('logging data',data)
-        console.log('logging data.value',data.value)
-        if(toRaw(data.value.ver)){
-            loginState.value = true
-            emailState.value = data.value.res.email
-            console.log('logging emailState.value',emailState.value)
+        if(tokenState.value.token == 'default' || tokenState.value == null){
+            console.log('Inside the default token state')
+            return
         } else {
-            loginState.value = false
+            const {data} = await api.get('/user/verification',{
+                params:{
+                    token: tokenState.value.token
+                }
+            })
+            
+            console.log('logging data.ver',data.ver)
+            if(data.ver){
+                loginState.value = true
+                emailState.value = data.result.email
+            } else {
+                loginState.value = false
+            }
         }
     }
 
     function setToken(tokenArgs){
         tokenState.value.token = tokenArgs
-        console.log('after setting tokenArgs', tokenState)
     }
 
     const getToken = computed(()=>{

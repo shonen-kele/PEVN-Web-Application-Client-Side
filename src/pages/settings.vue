@@ -1,13 +1,14 @@
 <script setup>
-import {nextTick, ref, toRaw} from 'vue'
+import {nextTick, ref, toRaw, watch, inject} from 'vue'
 import {useRouter} from 'vue-router'
-import { useLoginStore } from '@/stores/login'
+import {useLoginStore} from '@/stores/login'
 
 const loginStore = useLoginStore()
 const router = useRouter()
 const wishToDelete = ref(false)
 const passInput = ref()
 const error = ref()
+const nuxtApp = useNuxtApp()
 
 onBeforeMount(async ()=>{
   await nextTick()
@@ -16,22 +17,32 @@ onBeforeMount(async ()=>{
     router.push('/')
   }
 })
+
+watch(loginStore.loginState, ()=>{
+  if(loginStore.loginState == null){
+    router.push('/')
+  }
+})
+
 function logout(){
-  loginStore.tokenState.token = null
+  loginStore.tokenState = null
   loginStore.setLoginState(false)
   router.push('/')
 }
 
 async function confirmDelete(){
-  const {data} = useFetch('/api/deleteAccount',{
-    method:'POST',
-    body:{
-      password:passInput.value
+  const {data} = nuxtApp.$api.delete('/user',{
+    params:{
+      email: loginStore.emailState,
+      password: passInput.value
     }
   })
-  if(data.value.errorMessage){
-    error.value = data.value.errorMesssage
+  console.log(data)
+  if(data.errorMessage){
+    error.value = data.errorMesssage
   } else {
+    loginStore.tokenState.token = null
+    loginStore.setLoginState(false)
     router.push('/')
   }
 }
@@ -54,7 +65,10 @@ async function confirmDelete(){
     </v-btn>
     <br>
     <div v-if="wishToDelete">
-      <v-text-field v-model="passInput"/>
+      <v-text-field 
+        v-model="passInput"
+        type="password"
+      />
       <br>
       <div id="confirm-buttons">
         <v-btn 

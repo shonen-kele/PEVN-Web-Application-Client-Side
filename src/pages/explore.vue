@@ -1,31 +1,41 @@
 <script setup>
-  import {ref, onMounted, nextTick, h} from 'vue'
+  import {ref, onMounted, nextTick, getCurrentInstance, toRaw} from 'vue'
   import {useRouter} from 'vue-router'
   import {useArgumentStore} from '@/stores/argument'
-  import { useMouse } from '@vueuse/core'
+  import {useLoginStore} from '@/stores/login'
+  
 
-  const store = useArgumentStore()
+  const argumnetStore = useArgumentStore()
+  const loginStore = useLoginStore()
   const router = useRouter()
   const columns = ref(null)
-  const vCards = ref(null)
+  const vCards = ref([])
+  const nuxtApp = useNuxtApp()
+  const parentHovered = ref(false)
+  const currentInstance = getCurrentInstance()
   const argumentContainer = ref([
     {id:1, arguments:[]},
     {id:2, arguments:[]},
     {id:3, arguments:[]},
     {id:4, arguments:[]}
   ])
+  const toolTipText = ref()
+  const snackbar = ref(false)
+  const snackbarMessage = ref()
+
+  console.log('login state explore',loginStore.loginState)
+
   let offset = 0
   for (let index = 0; index < argumentContainer.value.length; index++) {
     const element = argumentContainer.value[index];
     offset += element.arguments.length
   }
-  const {data} = await useFetch('/api/displayArguments',{
-    method:'POST',
-    body:{
+  const {data} = await nuxtApp.$api.get('/argument',{
+    params:{
       offset:offset
     }
   })
-  let args = data.value.arguments
+  let args = data.arguments
   for(let index = 0; index<4; index++){
     let argument = args[index]
     argumentContainer.value[index].arguments.push(argument)
@@ -42,13 +52,29 @@
       argumentContainer.value[emptySpaces.indexOf(smallestSpace)].arguments.push(args[index])
       await nextTick()
     }
+
+    console.log(vCards.value)
   })
+
+  async function watchArgument(argumentId){
+    const {data} = await nuxtApp.$api.put('/user/watch',{
+      email:loginStore.emailState,
+      id:argumentId
+    })
+    snackbarMessage.value = data.message
+  }
+
+  function showTooltip(text){
+    toolTipText.value = text
+    parentHovered.value = true
+  }
 </script>
 
 <template>
   <section id="explore-root">
     <h1>The explore page</h1>
     <v-btn @click="()=>displayArguments">Refresh page</v-btn>
+    
     <div id="argument-container">
       <div 
       v-for="column in argumentContainer" 
@@ -61,22 +87,42 @@
         :text="argument.argument"
         :title="argument.title"
         ref="vCards"
-        variant="tonal">
+        @mouseover="showTooltip(argument.title)"
+        @mouseleave="parentHovered=false"
+        >
           <v-card-actions>
-            <v-flex>
-              <v-btn variant="text" @click="()=>{
-                store.argumentTitle = argument.title
-                store.argumentBody = argument.argument
-                store.email = argument.email
-                router.push(`/arena-${argument.id}`)
-              }">Rebute</v-btn>
-              <v-btn variant="text">Entail</v-btn>
-              <v-btn variant="text">Comment</v-btn>
-              <v-btn variant="text">Save</v-btn>
-            </v-flex>
+            <v-btn variant="text" @click="()=>{
+              router.push(`/arena-${argument.id}`)
+            }">View</v-btn>
+            <v-btn 
+              variant="text"
+              v-if="loginStore.loginState"
+              @click="()=>{
+                watchArgument(argument.id)
+                snackbar = true
+              }"
+            >
+            Watch
+            </v-btn>
           </v-card-actions>
         </v-card>
+        
       </div>
+      <tooltip
+        v-if="parentHovered"
+        :text="toolTipText"
+      />
+      <v-snackbar
+        v-model="snackbar"
+        timeout="2000"
+      >
+        {{snackbarMessage}}
+        <template v-slot:actions>
+          <v-btn
+            @click="snackbar = false"
+          >Close</v-btn>
+        </template>
+      </v-snackbar>
     </div>
   </section>
   
@@ -100,7 +146,7 @@
     display: flex;
     flex-direction: row;
   }
-  
+
   .v-card-actions .v-btn{
     margin:5px;
     color: rgb(85, 42, 37);

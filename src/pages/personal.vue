@@ -1,5 +1,5 @@
 <script setup>
-  import { nextTick, ref, toRaw } from 'vue';
+  import { nextTick, ref, watch } from 'vue';
   import {useRouter} from 'vue-router'
   import { useLoginStore } from '@/stores/login'
   
@@ -14,28 +14,33 @@
   const isOpen = ref(false)
   const isEditting = ref(false)
   const editId = ref()
+  const nuxtApp = useNuxtApp()
 
   async function displayPersonalArguments(){
-    const {data} = await useFetch('/api/displayPersonalArguments',{
-      method:'POST',
-      body:{
-        email:loginStore.emailState
+    const {data} = await nuxtApp.$api.get('/argument',{
+      params:{
+        email: loginStore.emailState
       }
     })
     console.log('personal arguments data',data)
-    error2.value = data.value.errorMessage
+    error2.value = data.errorMessage
     personalArguments.value = []
-    if(data.value.arguments){
-      data.value.arguments.forEach(argument => {
+    if(data.arguments){
+      data.arguments.forEach(argument => {
         personalArguments.value.push(argument)
       })
     }
   }
 
+  watch(loginStore.tokenState,()=>{
+    loginStore.fetchTokenVerification()
+  })
+
   onBeforeMount(async ()=>{
     await nextTick()
     loginStore.fetchTokenVerification()
-
+    console.log('token',loginStore.tokenState.token)
+    console.log('login state',loginStore.loginState)
     if(!loginStore.loginState){
       router.push('/authentication')
     } else {
@@ -45,13 +50,10 @@
   
 
   async function createArgument(){
-    const {data} = await useFetch('/api/createArgument',{
-      method:'POST',
-      body:{
-        email: loginStore.emailState,
-        title: argumentTitle.value,
-        argument: argumentBody.value
-      }
+    const {data} = await nuxtApp.$api.post('/argument',{
+      email: loginStore.emailState,
+      title: argumentTitle.value,
+      argument: argumentBody.value
     })
     error.value = data.value.errorMessage
     message.value = data.value.message
@@ -63,10 +65,9 @@
   }
 
   async function destroyArgument(idNumber){
-    await useFetch('/api/destroyArgument',{
-      method:'POST',
-      body:{
-        id: idNumber
+    nuxtApp.$api.delete('/destroyArgument',{
+      params:{
+        id:idNumner
       }
     })
     displayPersonalArguments()
@@ -81,16 +82,15 @@
   }
 
   async function confirmEdit(){
-    const {data} = await useFetch('/api/confirmEdit',{
-      method:'POST',
-      body:{
+    const {data} = await nuxtApp.$api.put('/argument',{
+      params:{
         id: editId.value,
         title: argumentTitle.value,
         argument: argumentBody.value
       }
     })
-    error.value = data.value.errorMessage
-    message.value = data.value.message
+    error.value = data.errorMessage
+    message.value = data.message
     displayPersonalArguments()
   }
 </script>

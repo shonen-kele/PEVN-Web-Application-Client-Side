@@ -1,20 +1,26 @@
 <script setup>
+  import TextComparison from '@/components/TextComparison.vue'
   import {ref} from 'vue'
   import {useRoute} from 'vue-router'
+  import {useArgumentStore} from '@/stores/argument'
+
   const rules = ref([v => v.length <= 5000 || 'Max 5000 characters'])
   const route = useRoute()
   let id = route.params.id
-  const {data} = await useFetch('/api/getArgument',{
-    method:'POST',
-    body:{
+  const nuxtApp = useNuxtApp()
+  const argumentStore = useArgumentStore()
+  
+
+  const {data} = await nuxtApp.$api.get('/argument',{
+    params:{
       id:id
     }
   })
-  const argumentTitle = ref(data.value.argumentTitle)
-  const argumentBody = ref(data.value.argumentBody)
+  const argumentTitle = ref(data.argumentTitle)
+  argumentStore.argumentBody = data.argumentBody
   const argumentId = ref(id)
-  const paramsError = ref(data.value.errorMessage)
-
+  const paramsError = ref(data.errorMessage)
+  argumentStore.finalArgumentBody = data.argumentBody
 </script>
 
 <template>
@@ -22,24 +28,10 @@
     <div v-if="!paramsError">
       <h3>{{ argumentTitle }}</h3>
       <div id="comparison">
-        <div id="text-area-functionality">
-          <v-textarea 
-          rows=20
-          cols="50"
-          counter
-          placeholder="Rebut the argument"
-          :model-value="argumentBody"
-          :rules="rules"
-          ></v-textarea>
-          <div class="text-area-actions">
-            <v-btn>Reset</v-btn>
-          </div>
-        </div>
-        
-        <v-card 
-        variant="tonal"
-        :text="argumentBody"
-        ></v-card>
+        <TextEditor
+          id="text-editor"
+        />
+        <TextComparison/>
       </div>
     </div>
     <h1 v-else>{{ paramsError }}</h1>

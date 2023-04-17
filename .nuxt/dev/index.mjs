@@ -5,10 +5,7 @@ import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
 import { provider, isWindows } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/std-env/dist/index.mjs';
-import { defineEventHandler, handleCacheHeaders, createEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, getRequestHeaders, setResponseHeader, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, readBody, getQuery, createError } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/h3/dist/index.mjs';
-import Joi from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/joi/lib/index.js';
-import { db } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/src/models/index.js';
-import jwt from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/jsonwebtoken/index.js';
+import { defineEventHandler, handleCacheHeaders, createEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, setResponseStatus, getRequestHeader, setResponseHeader, getRequestHeaders, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, getQuery, createError } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/h3/dist/index.mjs';
 import { createRenderer } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import devalue from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/@nuxt/devalue/dist/devalue.mjs';
 import { renderToString } from 'file://C:/Users/kmba2/Coding/Projects%20in%20coding/Yessay/client/node_modules/vue/server-renderer/index.mjs';
@@ -410,12 +407,7 @@ function defineRenderHandler(handler) {
       for (const header in response.headers) {
         event.node.res.setHeader(header, response.headers[header]);
       }
-      if (response.statusCode) {
-        event.node.res.statusCode = response.statusCode;
-      }
-      if (response.statusMessage) {
-        event.node.res.statusMessage = response.statusMessage;
-      }
+      setResponseStatus(event, response.statusCode, response.statusMessage);
     }
     return typeof response.body === "string" ? response.body : JSON.stringify(response.body);
   });
@@ -458,10 +450,7 @@ const errorHandler = (async function errorhandler(error, event) {
     stack: statusCode !== 404 ? `<pre>${stack.map((i) => `<span class="stack${i.internal ? " internal" : ""}">${i.text}</span>`).join("\n")}</pre>` : "",
     data: error.data
   };
-  event.node.res.statusCode = errorObject.statusCode !== 200 && errorObject.statusCode || 500;
-  if (errorObject.statusMessage) {
-    event.node.res.statusMessage = errorObject.statusMessage;
-  }
+  setResponseStatus(event, errorObject.statusCode !== 200 && errorObject.statusCode || 500, errorObject.statusMessage);
   if (error.unhandled || error.fatal) {
     const tags = [
       "[nuxt]",
@@ -473,7 +462,7 @@ const errorHandler = (async function errorhandler(error, event) {
     console.error(tags, errorObject.message + "\n" + stack.map((l) => "  " + l.text).join("  \n"));
   }
   if (isJsonRequest(event)) {
-    event.node.res.setHeader("Content-Type", "application/json");
+    setResponseHeader(event, "Content-Type", "application/json");
     event.node.res.end(JSON.stringify(errorObject));
     return;
   }
@@ -487,45 +476,20 @@ const errorHandler = (async function errorhandler(error, event) {
     {
       errorObject.description = errorObject.message;
     }
-    event.node.res.setHeader("Content-Type", "text/html;charset=UTF-8");
+    setResponseHeader(event, "Content-Type", "text/html;charset=UTF-8");
     event.node.res.end(template(errorObject));
     return;
   }
   for (const [header, value] of res.headers.entries()) {
     setResponseHeader(event, header, value);
   }
-  if (res.status && res.status !== 200) {
-    event.node.res.statusCode = res.status;
-  }
-  if (res.statusText) {
-    event.node.res.statusMessage = res.statusText;
-  }
+  setResponseStatus(event, res.status && res.status !== 200 ? res.status : void 0, res.statusText);
   event.node.res.end(await res.text());
 });
 
-const _lazy_rgcJbM = () => Promise.resolve().then(function () { return confirmEdit_post$1; });
-const _lazy_S5RnCb = () => Promise.resolve().then(function () { return createArgument_post$1; });
-const _lazy_G9BrvS = () => Promise.resolve().then(function () { return deleteAccount_post$1; });
-const _lazy_CIdjjs = () => Promise.resolve().then(function () { return destroyArgument_post$1; });
-const _lazy_iGuqi9 = () => Promise.resolve().then(function () { return displayArguments_post$1; });
-const _lazy_dRxiMS = () => Promise.resolve().then(function () { return displayPersonalArguments_post$1; });
-const _lazy_yci3mR = () => Promise.resolve().then(function () { return getArgument_post$1; });
-const _lazy_HWojRq = () => Promise.resolve().then(function () { return login_post$1; });
-const _lazy_48xnwD = () => Promise.resolve().then(function () { return register_post$1; });
-const _lazy_ZtYpl6 = () => Promise.resolve().then(function () { return verifyToken_post$1; });
 const _lazy_ynvccF = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
-  { route: '/api/confirmEdit', handler: _lazy_rgcJbM, lazy: true, middleware: false, method: "post" },
-  { route: '/api/createArgument', handler: _lazy_S5RnCb, lazy: true, middleware: false, method: "post" },
-  { route: '/api/deleteAccount', handler: _lazy_G9BrvS, lazy: true, middleware: false, method: "post" },
-  { route: '/api/destroyArgument', handler: _lazy_CIdjjs, lazy: true, middleware: false, method: "post" },
-  { route: '/api/displayArguments', handler: _lazy_iGuqi9, lazy: true, middleware: false, method: "post" },
-  { route: '/api/displayPersonalArguments', handler: _lazy_dRxiMS, lazy: true, middleware: false, method: "post" },
-  { route: '/api/getArgument', handler: _lazy_yci3mR, lazy: true, middleware: false, method: "post" },
-  { route: '/api/login', handler: _lazy_HWojRq, lazy: true, middleware: false, method: "post" },
-  { route: '/api/register', handler: _lazy_48xnwD, lazy: true, middleware: false, method: "post" },
-  { route: '/api/verifyToken', handler: _lazy_ZtYpl6, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_ynvccF, lazy: true, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_ynvccF, lazy: true, middleware: false, method: undefined }
 ];
@@ -653,337 +617,6 @@ const errorDev = /*#__PURE__*/Object.freeze({
       template: template
 });
 
-async function createArgument(body) {
-  const argumentCount = await db.sequelize.models.Argument.count({
-    where: { email: body.email }
-  });
-  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: {
-    title: body.title,
-    email: body.email
-  } });
-  if (argumentInstance == null) {
-    await db.sequelize.models.Argument.create({
-      email: body.email,
-      title: body.title,
-      argument: body.argument,
-      argumentIndex: argumentCount + 1
-    });
-    return { message: "You have entered the argeument" };
-  } else {
-    return { errorMessage: "You have already entered this argument" };
-  }
-}
-async function destroyArgument(body) {
-  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: {
-    id: body.id
-  } });
-  if (argumentInstance == null) {
-    return { errorMessage: "The argument does not exist" };
-  } else {
-    await argumentInstance.destroy();
-    return { message: "The argument was destroyed" };
-  }
-}
-async function displayPersonalArguments(body) {
-  const argumentInstances = await db.sequelize.models.Argument.findAll({ where: { email: body.email } });
-  if (argumentInstances.length == 0) {
-    return { errorMessage: "You have made no argument" };
-  } else {
-    return { arguments: argumentInstances };
-  }
-}
-async function editArgument(body) {
-  const argumentInstance = await db.sequelize.models.Argument.findOne({ where: { id: body.id } });
-  if (argumentInstance) {
-    await argumentInstance.update({ title: body.title });
-    await argumentInstance.update({ argument: body.argument });
-    return { error: false };
-  } else {
-    return { error: true };
-  }
-}
-async function displayArguments(offset) {
-  const { rows } = await db.sequelize.models.Argument.findAndCountAll({
-    limit: 30,
-    offset
-  });
-  return { arguments: rows };
-}
-
-const confirmEdit_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  return editArgument(body);
-});
-
-const confirmEdit_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: confirmEdit_post
-});
-
-function createArgumentPolicy(body) {
-  const titleTemplate = Joi.string().max(100).min(1);
-  const argumentTemplate = Joi.string().max(5e3).min(50);
-  const { titleError } = titleTemplate.validate(body.title);
-  const { argumentError } = argumentTemplate.validate(body.argument);
-  if (titleError) {
-    return {
-      errorMessage: "The title is too long or too short",
-      error: true
-    };
-  } else if (argumentError) {
-    return {
-      error: true,
-      errorMessage: `The argument was either too long or too short 
-            <br/>
-            The argument must be at least 50 characters short or 5000 characters long.`
-    };
-  } else {
-    return false;
-  }
-}
-
-const createArgument_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const { error, errorMessage } = createArgumentPolicy(body);
-  if (!error) {
-    return createArgument(body);
-  } else {
-    return errorMessage;
-  }
-});
-
-const createArgument_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: createArgument_post
-});
-
-function jwtSignUser(userInstance) {
-  const ONE_WEEK = 60 * 60 * 24 * 7;
-  return jwt.sign(userInstance, process.env.JWT_SECRET, {
-    expiresIn: ONE_WEEK
-  });
-}
-async function register(body) {
-  let userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
-  if (userInstance == null) {
-    await db.sequelize.models.User.create(body);
-    userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
-    const userJson = userInstance.toJSON();
-    return {
-      message: "The user has signed up",
-      token: jwtSignUser(userJson),
-      email: userInstance.email
-    };
-  } else {
-    console.log("The user has already signed up");
-    return { errorMessage: "The user has already signed up" };
-  }
-}
-async function login(body) {
-  const userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
-  if (userInstance === null) {
-    return { errorMessage: "The email is not in the database" };
-  }
-  const isPasswordValid = await userInstance.comparePassword(body.password);
-  if (!isPasswordValid) {
-    return { errorMessage: "The password was incorrect" };
-  } else {
-    const userJson = userInstance.toJSON();
-    return {
-      message: "You have successfully logged in",
-      token: jwtSignUser(userJson),
-      email: userInstance.email
-    };
-  }
-}
-async function deleteAccount(body) {
-  const userInstance = await db.sequelize.models.User.findOne({ where: { email: body.email } });
-  const isPasswordValid = await userInstance.comparePassword(body.password);
-  if (isPasswordValid) {
-    return { errorMessage: "You have entered the wrong password" };
-  } else {
-    userInstance.destroy();
-    return { message: "Your account was successfully deleted" };
-  }
-}
-async function verifyToken(token) {
-  let verified;
-  let decoded;
-  let exp;
-  jwt.verify(token, process.env.JWT_SECRET, function(err, result) {
-    if (!err) {
-      decoded = result;
-      exp = result.exp;
-    } else {
-      console.log(err);
-    }
-  });
-  if (Date.now() >= exp * 1e3 || decoded == void 0) {
-    verified = false;
-  } else {
-    verified = true;
-  }
-  return {
-    res: decoded,
-    ver: verified
-  };
-}
-
-const deleteAccount_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  return deleteAccount(body);
-});
-
-const deleteAccount_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: deleteAccount_post
-});
-
-const destroyArgument_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  return destroyArgument(body);
-});
-
-const destroyArgument_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: destroyArgument_post
-});
-
-const displayArguments_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  return displayArguments(body.offset);
-});
-
-const displayArguments_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: displayArguments_post
-});
-
-const displayPersonalArguments_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  return displayPersonalArguments(body);
-});
-
-const displayPersonalArguments_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: displayPersonalArguments_post
-});
-
-async function getArgument(id) {
-  const argumentInstance = await db.sequelize.models.Argument.findOne({
-    where: { id }
-  });
-  if (argumentInstance) {
-    return {
-      argumentId: argumentInstance.id,
-      argumentBody: argumentInstance.argument,
-      argumentTitle: argumentInstance.title
-    };
-  } else {
-    return { errorMessage: `The argument with id ${id} does not exist or there was an internal error` };
-  }
-}
-
-const getArgument_post = defineEventHandler(async (event) => {
-  const { id } = await readBody(event);
-  return getArgument(id);
-});
-
-const getArgument_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: getArgument_post
-});
-
-function registerPolicy(body) {
-  if (body.email == void 0 || body.password == void 0) {
-    return {
-      error: true,
-      errorMessage: "The email or password is not defined"
-    };
-  }
-  const template = Joi.object({
-    email: Joi.string().email(),
-    password: Joi.string().regex(
-      new RegExp("^[a-zA-Z0-9!@#$%^&*)(+=._-]{8,32}$")
-    )
-  });
-  const { error } = template.validate(body);
-  if (error) {
-    switch (error.details[0].context.key) {
-      case "email":
-        console.log("The email format is not valid");
-        return { error: true, errorMessage: "The email format was not valid" };
-      case "password":
-        console.log("The password format is not valid");
-        return {
-          error: false,
-          errorMessage: `You must provide a valid password
-                    <br/>
-                    1. It must contain only the characters: a-z,A-Z,0-9 and special characters <br/>
-                    (!@#$^&*()+=._-{}[])
-                    <br/>
-                    2. It must only be 8-32 characters in length`
-        };
-      default:
-        return { error: true };
-    }
-  } else {
-    return { error: false };
-  }
-}
-function loginPolicy(body) {
-  if (body.email == void 0) {
-    return { error: true, errorMessage: "You have not entered an email" };
-  }
-  const email = Joi.string().email();
-  const { error } = email.validate(body.email);
-  if (error) {
-    return { error: true, errorMessage: "What you provided was not the format of an email" };
-  } else {
-    return { error: false };
-  }
-}
-
-const login_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const { error, errorMessage } = loginPolicy(body);
-  if (!error) {
-    return login(body);
-  } else {
-    return errorMessage;
-  }
-});
-
-const login_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: login_post
-});
-
-const register_post = defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const { error, errorMessage } = registerPolicy(body);
-  if (!error) {
-    return register(body);
-  } else {
-    return errorMessage;
-  }
-});
-
-const register_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: register_post
-});
-
-const verifyToken_post = defineEventHandler(async (event) => {
-  const { token } = await readBody(event);
-  return verifyToken(token);
-});
-
-const verifyToken_post$1 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      default: verifyToken_post
-});
-
 const appRootId = "__nuxt";
 
 const appRootTag = "div";
@@ -1038,13 +671,14 @@ const getSPARenderer = lazyCachedFunction(async () => {
   const renderToString = (ssrContext) => {
     const config = useRuntimeConfig();
     ssrContext.payload = {
+      _errors: {},
       serverRendered: false,
-      config: {
-        public: config.public,
-        app: config.app
-      },
       data: {},
       state: {}
+    };
+    ssrContext.config = {
+      public: config.public,
+      app: config.app
     };
     ssrContext.renderMeta = ssrContext.renderMeta ?? getStaticRenderedHead;
     return Promise.resolve(result);
@@ -1076,11 +710,12 @@ const renderer = defineRenderHandler(async (event) => {
     url,
     event,
     runtimeConfig: useRuntimeConfig(),
-    noSSR: !!event.node.req.headers["x-nuxt-no-ssr"] || routeOptions.ssr === false || (false),
+    noSSR: event.context.nuxt?.noSSR || routeOptions.ssr === false || (false),
     error: !!ssrError,
     nuxt: void 0,
     /* NuxtApp */
     payload: ssrError ? { error: ssrError } : {},
+    _payloadReducers: {},
     islandContext
   };
   const renderer = ssrContext.noSSR ? await getSPARenderer() : await getSSRRenderer();
@@ -1088,6 +723,9 @@ const renderer = defineRenderHandler(async (event) => {
     throw !ssrError && ssrContext.payload?.error || error;
   });
   await ssrContext.nuxt?.hooks.callHook("app:rendered", { ssrContext });
+  if (event.node.res.headersSent || event.node.res.writableEnded) {
+    return;
+  }
   if (ssrContext.payload?.error && !ssrError) {
     throw ssrContext.payload.error;
   }
@@ -1097,13 +735,14 @@ const renderer = defineRenderHandler(async (event) => {
   }
   const renderedMeta = await ssrContext.renderMeta?.() ?? {};
   const inlinedStyles = "";
+  const NO_SCRIPTS = routeOptions.experimentalNoScripts;
   const htmlContext = {
     island: Boolean(islandContext),
     htmlAttrs: normalizeChunks([renderedMeta.htmlAttrs]),
     head: normalizeChunks([
       renderedMeta.headTags,
       null,
-      _rendered.renderResourceHints(),
+      NO_SCRIPTS ? null : _rendered.renderResourceHints(),
       _rendered.renderStyles(),
       inlinedStyles,
       ssrContext.styles
@@ -1115,8 +754,8 @@ const renderer = defineRenderHandler(async (event) => {
     ]),
     body: [_rendered.html],
     bodyAppend: normalizeChunks([
-      `<script>window.__NUXT__=${devalue(ssrContext.payload)}<\/script>`,
-      _rendered.renderScripts(),
+      NO_SCRIPTS ? void 0 : renderPayloadScript({ ssrContext, data: ssrContext.payload }),
+      routeOptions.experimentalNoScripts ? void 0 : _rendered.renderScripts(),
       // Note: bodyScripts may contain tags other than <script>
       renderedMeta.bodyScripts
     ])
@@ -1167,10 +806,14 @@ function renderPayloadResponse(ssrContext) {
     statusCode: ssrContext.event.node.res.statusCode,
     statusMessage: ssrContext.event.node.res.statusMessage,
     headers: {
-      "content-type": "text/javascript;charset=UTF-8",
+      "content-type": "text/javascript;charset=utf-8",
       "x-powered-by": "Nuxt"
     }
   };
+}
+function renderPayloadScript(opts) {
+  opts.data.config = opts.ssrContext.config;
+  return `<script>window.__NUXT__=${devalue(opts.data)}<\/script>`;
 }
 function splitPayload(ssrContext) {
   const { data, prerenderedAt, ...initial } = ssrContext.payload;

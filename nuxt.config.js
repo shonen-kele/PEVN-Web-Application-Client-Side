@@ -1,12 +1,15 @@
-import { defineNuxtConfig } from "nuxt/config";
+import { defineNuxtConfig } from "nuxt/config"
 import path from 'path'
+import vuetify from "vite-plugin-vuetify"
 
 export default defineNuxtConfig({
-    buildDir:'.nuxt',
     alias: {
         '@': path.resolve(__dirname,'src')
     },
-    css:['vuetify/lib/styles/main.css'],
+    css:[
+        'vuetify/styles',
+        'vuetify/lib/styles/main.css'
+    ],
     build:{
         transpile:['vuetify']
     },
@@ -34,6 +37,9 @@ export default defineNuxtConfig({
     modules:[
         '@pinia/nuxt',
         '@nuxt/devtools',
-        '@vueuse/nuxt'
+        '@vueuse/nuxt',
+        async (options, nuxt) =>{
+            nuxt.hooks.hook('vite:extendConfig', config => config.plugins.push(vuetify()))
+        }
     ]
 })

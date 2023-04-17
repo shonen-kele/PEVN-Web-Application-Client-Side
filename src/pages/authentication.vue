@@ -9,48 +9,36 @@ const isLoginForm = ref(false)
 const {setEmail,setToken,setLoginState} = loginStore
 const error = ref()
 const message = ref()
-console.log('on setup',loginStore.tokenState)
+const nuxtApp = useNuxtApp()
 async function login(email,password){
-	const {data} = await useFetch('/api/login',{
-		method:'POST',
-		body:{
+	const {data} = await nuxtApp.$api.get('/user',{
+		params:{
 			email:email,
 			password:password
 		}
 	})
-	error.value = data.value.errorMessage
-	message.value = data.value.message
+	error.value = data.errorMessage
+	message.value = data.message
 	if(message.value){
-		await setToken(data.value.token)
-		console.log('Local storage after setToken',loginStore.tokenState)
+		setToken(data.token)
 		setLoginState(true)
-		await router.push('/personal')
-	} else {
-		setEmail(null)
+		router.push('/personal')
 	}
 }
 async function register(email,password){
-	const {data} = await useFetch('/api/register',{
-		method:'POST',
-		body:{
-			email:email,
-			password:password
-		}
+	const {data} = await nuxtApp.$api.post('/user',{
+		email:email,
+		password:password
 	})
-	error.value = data.value.errorMessage
-	message.value = data.value.Emit
-	if(message.value){
-		setToken(data.value.token)
-		setEmail(data.value.email)
-	}
+	error.value = data.errorMessage
+	message.value = data.message
+	console.log(message.value)
 }
 
-onBeforeMount(()=>{
-	loginStore.fetchTokenVerification()
-	if(loginStore.loginState){
-		router.push('/personal')
-	}
-})
+loginStore.fetchTokenVerification()
+if(loginStore.loginState){
+	router.push('/personal')
+}
 
 </script>
 
@@ -92,12 +80,14 @@ onBeforeMount(()=>{
     <div
       v-if="error"
       class="error"
-      :text="error"
-    ></div>
+    >
+		{{ error }}
+	</div>
     <div
       v-if="message"
-      :text="error"
-    ></div>
+    >
+		{{ message }}
+	</div>
   </section>
 </template>
 

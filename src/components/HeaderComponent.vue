@@ -7,14 +7,6 @@
   const email = ref()
   const router = useRouter()
   
-  onBeforeMount(async ()=>{
-    loginStore.fetchTokenVerification()
-  })
-
-  watch(loginStore.tokenState, async ()=>{
-    loginStore.fetchTokenVerification()
-  })
-  
 </script>
 
 <template>
