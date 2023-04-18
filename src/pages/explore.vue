@@ -30,11 +30,12 @@
     const element = argumentContainer.value[index];
     offset += element.arguments.length
   }
-  const {data} = await nuxtApp.$api.get('/argument',{
+  const {data} = await nuxtApp.$api.get('/arguments',{
     params:{
       offset:offset
     }
   })
+  console.log('logging data',data)
   let args = data.arguments
   for(let index = 0; index<4; index++){
     let argument = args[index]
@@ -52,13 +53,10 @@
       argumentContainer.value[emptySpaces.indexOf(smallestSpace)].arguments.push(args[index])
       await nextTick()
     }
-
-    console.log(vCards.value)
   })
 
   async function watchArgument(argumentId){
-    const {data} = await nuxtApp.$api.put('/user/watch',{
-      email:loginStore.emailState,
+    const {data} = await nuxtApp.$api.put(`/users/${loginStore.emailState}/watch`,{
       id:argumentId
     })
     snackbarMessage.value = data.message

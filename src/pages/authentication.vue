@@ -11,11 +11,9 @@ const error = ref()
 const message = ref()
 const nuxtApp = useNuxtApp()
 async function login(email,password){
-	const {data} = await nuxtApp.$api.get('/user',{
-		params:{
-			email:email,
-			password:password
-		}
+	const {data} = await nuxtApp.$api.post('/login',{
+		email: email,
+		password: password
 	})
 	error.value = data.errorMessage
 	message.value = data.message
@@ -26,7 +24,7 @@ async function login(email,password){
 	}
 }
 async function register(email,password){
-	const {data} = await nuxtApp.$api.post('/user',{
+	const {data} = await nuxtApp.$api.post('/register',{
 		email:email,
 		password:password
 	})
@@ -35,8 +33,9 @@ async function register(email,password){
 	console.log(message.value)
 }
 
-loginStore.fetchTokenVerification()
+await loginStore.fetchTokenVerification()
 if(loginStore.loginState){
+	console.log('here!')
 	router.push('/personal')
 }
 

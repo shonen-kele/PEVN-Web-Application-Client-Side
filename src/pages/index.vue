@@ -5,14 +5,11 @@
   const nuxtApp = useNuxtApp()
   const watchedArguments = ref([])
   if(loginStore.emailState){
-    const watch = await nuxtApp.$api.get('/user/watch',{
+    const watch = await nuxtApp.$api.get(`users/${loginStore.emailState}/watch`)
+    console.log('logging watch',watch)
+    const {data} = await nuxtApp.$api.get('/arguments',{
       params:{
-        email:loginStore.emailState
-      }
-    }).watchedId
-    const {data} = await nuxtApp.$api.get('/argument',{
-      params:{
-        id:watch.watchedId
+        id:watch.data.watchedId
       }
     })
 
@@ -27,12 +24,17 @@
 </script>
 <template>
   <section>
-    <v-card 
-    v-for="watchedArgument in watchedArguments"
-    :title="watchedArgument.title"
-    :text="watchedArgument.argument"
-    v-if="loginStore.emailState"
-    ></v-card>
+    <div
+      v-if="loginStore.emailState"
+    >
+      <p>These are your saved arguments</p>
+      <v-card 
+        v-for="watchedArgument in watchedArguments"
+        :title="watchedArgument.title"
+        :text="watchedArgument.argument"
+      ></v-card>
+    </div>
+    
     <p v-else>This is the home page</p>
   </section>
 </template>

@@ -31,11 +31,9 @@ function logout(){
 }
 
 async function confirmDelete(){
-  const {data} = nuxtApp.$api.delete('/user',{
-    params:{
-      email: loginStore.emailState,
-      password: passInput.value
-    }
+  const {data} = await nuxtApp.$api.post('/deleteAccount',{
+    email: loginStore.emailState,
+    password: passInput.value
   })
   console.log(data)
   if(data.errorMessage){

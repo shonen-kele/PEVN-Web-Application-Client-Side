@@ -18,10 +18,8 @@ export const useLoginStore = defineStore('login', ()=>{
             console.log('Inside the default token state')
             return
         } else {
-            const {data} = await api.get('/user/verification',{
-                params:{
-                    token: tokenState.value.token
-                }
+            const {data} = await api.post('/verification',{
+                token: tokenState.value.token
             })
             
             console.log('logging data.ver',data.ver)
@@ -44,6 +42,7 @@ export const useLoginStore = defineStore('login', ()=>{
 
     function setLoginState(isUserLoggedIn){
         loginState.value = isUserLoggedIn
+        emailState.value = null
     }
     return {
         tokenState: skipHydrate(tokenState),

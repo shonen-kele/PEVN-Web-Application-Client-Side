@@ -11,7 +11,7 @@
   const argumentStore = useArgumentStore()
   
 
-  const {data} = await nuxtApp.$api.get('/argument',{
+  const {data} = await nuxtApp.$api.get('/arguments',{
     params:{
       id:id
     }

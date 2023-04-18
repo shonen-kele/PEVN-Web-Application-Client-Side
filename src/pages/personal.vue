@@ -17,7 +17,7 @@
   const nuxtApp = useNuxtApp()
 
   async function displayPersonalArguments(){
-    const {data} = await nuxtApp.$api.get('/argument',{
+    const {data} = await nuxtApp.$api.get('/arguments',{
       params:{
         email: loginStore.emailState
       }
@@ -50,7 +50,7 @@
   
 
   async function createArgument(){
-    const {data} = await nuxtApp.$api.post('/argument',{
+    const {data} = await nuxtApp.$api.post('/arguments',{
       email: loginStore.emailState,
       title: argumentTitle.value,
       argument: argumentBody.value
@@ -65,11 +65,7 @@
   }
 
   async function destroyArgument(idNumber){
-    nuxtApp.$api.delete('/destroyArgument',{
-      params:{
-        id:idNumner
-      }
-    })
+    nuxtApp.$api.delete(`/arguments/${idNumber}`)
     displayPersonalArguments()
   }
 
@@ -82,9 +78,8 @@
   }
 
   async function confirmEdit(){
-    const {data} = await nuxtApp.$api.put('/argument',{
+    const {data} = await nuxtApp.$api.put(`/arguments/${editId.value}`,{
       params:{
-        id: editId.value,
         title: argumentTitle.value,
         argument: argumentBody.value
       }
